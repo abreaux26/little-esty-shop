@@ -1,3 +1,4 @@
 class InvoicesController < ApplicationController
-
-end 
+  def index
+  end
+end
