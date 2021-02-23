@@ -46,8 +46,6 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     arel (9.0.0)
     bindex (0.8.1)
-    bootsnap (1.7.2)
-      msgpack (~> 1.0)
     builder (3.2.4)
     capybara (3.35.3)
       addressable
@@ -108,7 +106,6 @@ GEM
     mimemagic (0.3.5)
     mini_mime (1.0.2)
     minitest (5.14.3)
-    msgpack (1.4.2)
     nio4r (2.5.5)
     nokogiri (1.11.1-x86_64-darwin)
       racc (~> 1.4)
@@ -235,7 +232,6 @@ PLATFORMS
   x86_64-darwin-19
 
 DEPENDENCIES
-  bootsnap (>= 1.1.0)
   capybara
   coffee-rails (~> 4.2)
   database_cleaner
