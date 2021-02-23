@@ -62,4 +62,4 @@ end
 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', '>= 1.2016.7' # Don't rely on OSX/Linux timezone data
