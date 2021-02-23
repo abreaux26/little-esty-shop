@@ -1,1 +1,5 @@
 <h1><%= @merchant.name %></h1>
+<nav class="nav">
+  <%= link_to 'My Items', "/merchant/#{@merchant.id}/items"%>
+  <%= link_to 'My Invoices', "/merchant/#{@merchant.id}/invoices"%>
+</nav>
