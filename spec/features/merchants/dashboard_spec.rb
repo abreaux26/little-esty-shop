@@ -20,7 +20,7 @@ RSpec.describe 'As a merchant' do
       within(".nav") do
         expect(page).to have_link('My Items')
         click_link('My Items')
-        expect(current_path).to eq("/merchant/#{@merchant.id}/items")
+        expect(current_path).to eq(merchant_items_path(@merchant))
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe 'As a merchant' do
       within(".nav") do
         expect(page).to have_link('My Invoices')
         click_link('My Invoices')
-        expect(current_path).to eq("/merchant/#{@merchant.id}/invoices")
+        expect(current_path).to eq(merchant_invoices_path(@merchant))
       end
     end
   end
