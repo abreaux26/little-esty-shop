@@ -40,11 +40,15 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
   gem 'rspec-rails', '~> 4.0.1'
+  gem 'rspec-pride'
   gem 'capybara'
+  gem 'database_cleaner'
+  gem 'shoulda-matchers'
   gem 'launchy'
-  gem 'simplecov'
-  gem 'shoulda-matchers', '~> 3.1'
+  gem 'simplecov', require: false, group: :test
   gem 'orderly'
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
 
 group :development do
@@ -58,4 +62,4 @@ end
 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', '>= 1.2016.7' # Don't rely on OSX/Linux timezone data

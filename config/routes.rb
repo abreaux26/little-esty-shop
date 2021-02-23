@@ -3,4 +3,11 @@ Rails.application.routes.draw do
   resources :merchants do
     resources :dashboard, only: :index
   end
+
+  resources :admin, only: [:index]
+
+  namespace :admin do
+    resources :merchants
+    resources :invoices
+  end
 end
