@@ -97,7 +97,6 @@ RSpec.describe "Admin Dashboard" do
     describe "top customer" do
       it "should list the top 5 customers (largest no. of successful transactions)" do
         visit admin_index_path
-        save_and_open_page
 
         cust1 = page.body.index(@customer_1.first_name)
         cust2 = page.body.index(@customer_2.first_name)
