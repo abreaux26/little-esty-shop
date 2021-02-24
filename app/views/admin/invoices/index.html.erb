@@ -2,6 +2,6 @@
 
 <section id='all-invoices'>
   <% @invoices.each do |invoice| %>
-    <%= invoice.id %>
+    <%= link_to(invoice.id, admin_invoice_path(invoice.id)) %>
   <% end %>
 </section>
