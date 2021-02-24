@@ -24,7 +24,6 @@ RSpec.describe 'Admin invoices index spec' do
         expect(page).to have_link(@invoice2.id)
         expect(page).to have_link(@invoice3.id)
 
-        # Only testing one invoice
         click_link @invoice1.id
         expect(current_path).to eq admin_invoice_path(@invoice1)
       end
