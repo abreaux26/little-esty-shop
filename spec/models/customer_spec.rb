@@ -33,7 +33,8 @@ RSpec.describe Customer do
   describe 'class methods' do
     describe '::all_successful_transactions_by_customer_count' do
       it "returns distinct customers with unshipped items" do
-        expect(Customer.all_successful_transactions_by_customer_count.pluck(:id)).to eq([@customer_1.id, @customer_2.id])
+        expect(Customer.all_successful_transactions_by_customer_count.first.id).to eq(@customer_1.id)
+        expect(Customer.all_successful_transactions_by_customer_count.all[1].id).to eq(@customer_2.id)
         expect(Customer.all_successful_transactions_by_customer_count.first.successful_transactions_count).to eq(2)
         expect(Customer.all_successful_transactions_by_customer_count.all[1].successful_transactions_count).to eq(1)
       end
