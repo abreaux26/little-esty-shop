@@ -24,7 +24,7 @@
 <section class="incomplete_invoices">
   <h2>Incomplete Invoices</h2>
     <% @incomplete_invoices.each do |incomplete_invoice| %>
-      Invoice #<%= incomplete_invoice.id %>- <%= incomplete_invoice.created_at %>
+      Invoice #<%= incomplete_invoice.id %>- <%= incomplete_invoice.created_at.strftime('%A, %B %d, %Y') %>
       <br>
     <% end %>
 </section>
