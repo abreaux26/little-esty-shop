@@ -7,12 +7,27 @@ RSpec.describe Merchant do
   end
 
   before :each do
+    setup_data
+  end
+
+  describe 'instance methods' do
+    it 'finds the top five customers' do
+      expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
+
+      expect(@merchant.top_five_customers).to eq(expected)
+    end
+
+    it 'finds transaction count given a customer_id' do
+      expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
+    end
+  end
+
+  def setup_data
     @merchant = create(:merchant)
 
     @item = create(:item, merchant_id: @merchant.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
-
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_1.id)
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
@@ -112,17 +127,5 @@ RSpec.describe Merchant do
     customer_8 = create(:customer)
     customer_9 = create(:customer)
     customer_10 = create(:customer)
-  end
-
-  describe 'instance methods' do
-    it 'finds the top five customers' do
-      expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
-
-      expect(@merchant.top_five_customers).to eq(expected)
-    end
-
-    it 'finds transaction count given a customer_id' do
-      expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
-    end
   end
 end

@@ -7,9 +7,9 @@ class Merchant < ApplicationRecord
 
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
-                           .where("transactions.result = 1")
+                           .where("transactions.result = ?", Transaction.results[:failed])
                            .group(:customer_id)
-                           .order('count(transactions.result = 1) desc')
+                           .order("count(transactions.result = #{Transaction.results[:success]}) desc", )
                            .limit(5)
                            .pluck(:customer_id)
 
@@ -17,8 +17,6 @@ class Merchant < ApplicationRecord
   end
 
   def transaction_count(customer_id)
-    transactions.where(result: 1, invoice_id: Invoice.find_from(customer_id)).size
+    transactions.where(result: Transaction.results[:success], invoice_id: Invoice.find_from(customer_id)).size
   end
-
-
 end
