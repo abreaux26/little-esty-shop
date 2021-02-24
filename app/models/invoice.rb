@@ -18,6 +18,10 @@ class Invoice < ApplicationRecord
     end
   end
 
+  def created_at_view_format
+    created_at.strftime('%A, %B %d, %Y')
+  end
+
   def self.all_invoices_with_unshipped_items
     joins(:invoice_items).where('invoice_items.status = ?', 1).distinct(:id).order(:created_at)
   end

@@ -20,7 +20,7 @@
 <section class="incomplete_invoices">
   <h2>Incomplete Invoices</h2>
     <% @incomplete_invoices.each do |incomplete_invoice| %>
-      Invoice #<a href="/admin/invoices/<%= incomplete_invoice.id %>"><%= incomplete_invoice.id %></a>- <%= incomplete_invoice.created_at.strftime('%A, %B %d, %Y') %>
+      Invoice #<a href="/admin/invoices/<%= incomplete_invoice.id %>"><%= incomplete_invoice.id %></a>- <%= incomplete_invoice.created_at_view_format %>
       <br>
     <% end %>
 </section>
