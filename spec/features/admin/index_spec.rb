@@ -5,7 +5,9 @@ RSpec.describe "Admin Dashboard" do
     @customer_1 = create(:customer, first_name: "Ace")
 
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
+    sleep(1)
     @invoice_2 = create(:invoice, customer_id: @customer_1.id)
+    sleep(1)
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
     @invoice_4 = create(:invoice, customer_id: @customer_1.id)
     @invoice_5 = create(:invoice, customer_id: @customer_1.id)
@@ -162,7 +164,10 @@ RSpec.describe "Admin Dashboard" do
         find_link("#{@invoice_24.id}")
       end
       it "should list the invoice ids from oldest to newest" do
-
+        visit admin_index_path
+      
+        expect("#{@invoice_1.id}").to appear_before("#{@invoice_3.id}", only_text: true)
+        expect("#{@invoice_3.id}").to appear_before("#{@invoice_24.id}", only_text: true)
       end
     end
   end
