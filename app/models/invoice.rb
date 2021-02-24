@@ -3,4 +3,8 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
   belongs_to :customer
+
+  def self.all_invoices_with_unshipped_items
+    joins(:invoice_items).where('invoice_items.status = ?', 0)
+  end
 end
