@@ -1,3 +1,6 @@
 class Transaction < ApplicationRecord
+  has_many :invoices
+  has_many :customers, through: :invoices
 
-end 
+  enum result: [ :success, :failed ]
+end
