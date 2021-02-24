@@ -15,7 +15,7 @@
 <section class="top_customers">
   <h2>Top Customers</h2>
     <% @top_customers.each do |top_customer| %>
-      <%= top_customer.first_name %> <%= top_customer.last_name %> -
+      <%= top_customer.full_name %> -
       <%= top_customer.successful_transactions_count %> purchases
       <br>
     <% end %>
