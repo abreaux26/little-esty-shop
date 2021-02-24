@@ -11,19 +11,46 @@ RSpec.describe Invoice do
   before :each do
     @customer_1 = create(:customer, first_name: "Ace")
     @customer_2 = create(:customer, first_name: "Eli")
-
+    @customer_3 = create(:customer)
+    #customer_1 related vars
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_1.id)
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
+    @transaction_1 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_1.id)
+    @transaction_2 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_2.id)
+    @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, status: InvoiceItem.statuses[:packaged])
+    @ii_2 = create(:invoice_item, invoice_id: @invoice_2.id, status: InvoiceItem.statuses[:shipped])
+    #customer_2 related vars
     @invoice_4 = create(:invoice, customer_id: @customer_2.id)
     @invoice_5 = create(:invoice, customer_id: @customer_2.id)
+    @invoice_21 = create(:invoice, customer_id: @customer_2.id)
+    @invoice_22 = create(:invoice, customer_id: @customer_2.id)
+    @transaction_21 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_21.id)
+    @transaction_22 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_22.id)
+    @ii_21 = create(:invoice_item, invoice_id: @invoice_21.id, status: InvoiceItem.statuses[:packaged])
+    #customer_3 related vars
+    @invoice_31 = create(:invoice, customer_id: @customer_3.id)
+    @invoice_32 = create(:invoice, customer_id: @customer_3.id)
+    @transaction_31 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_31.id)
+    @transaction_32 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_32.id)
+    @ii_31 = create(:invoice_item, invoice_id: @invoice_31.id, status: InvoiceItem.statuses[:shipped])
+
   end
 
   describe 'class methods' do
-    it 'returns invoices that belong to a specific customer' do
-      expected = [@invoice_1, @invoice_2, @invoice_3]
+    describe '::find_from(customer_id)' do
+      it 'returns invoices that belong to a specific customer' do
+        expected = [@invoice_1, @invoice_2, @invoice_3]
 
-      expect(Invoice.find_from(@customer_1.id)).to eq(expected)
+        expect(Invoice.find_from(@customer_1.id).to_a).to eq(expected)
+      end
+    end
+
+    describe '::all_invoices_with_unshipped_items' do
+      it 'returns all invoices with unshipped items' do
+
+        expect(Invoice.all_invoices_with_unshipped_items).to eq([@invoice_1, @invoice_21])
+      end
     end
   end
 end
