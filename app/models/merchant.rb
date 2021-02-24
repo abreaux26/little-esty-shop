@@ -20,13 +20,22 @@ class Merchant < ApplicationRecord
     transactions.where(result: 1, invoice_id: Invoice.find_from(customer_id)).size
   end
 
-  def items_ready_to_ship
-    item_ids = invoice_items.where.not(status: :shipped).joins(:invoice).where('invoices.status = 1').pluck(:item_id)
-
-    Item.find(item_ids)
+  def invoice_items_ready
+    invoice_items.where.not(status: :shipped)
+                            .joins(:invoice)
+                            .order('invoices.created_at')
+                            .where('invoices.status = 1')
   end
 
-  def invoice_for_item_ready(item_id)
-    invoice_items.where(item_id: item_id).pluck(:invoice_id).first
+  def item_find(item_id)
+    find(item_id)
+  end
+
+  def invoice_find(invoice_id)
+    Invoice.find(invoice_id)
+  end
+
+  def item_invoice_date(invoice_id)
+    Invoice.find(invoice_id).created_at.strftime('%A, %B %d, %Y')
   end
 end
