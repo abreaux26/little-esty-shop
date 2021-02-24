@@ -113,7 +113,7 @@ RSpec.describe 'As a merchant' do
     it 'I see the name of my merchant' do
       visit merchant_dashboard_index_path(@merchant)
 
-      expect(current_path).to eq("/merchant/#{@merchant.id}/dashboard")
+      expect(current_path).to eq("/merchants/#{@merchant.id}/dashboard")
 
       expect(page).to have_content(@merchant.name)
     end
@@ -160,7 +160,7 @@ RSpec.describe 'As a merchant' do
       within("#customer-#{@customer_1.id}") do
         expect(page).to have_content(@merchant.transaction_count(@customer_1.id))
       end
-      
+
       within("#customer-#{@customer_2.id}") do
         expect(page).to have_content(@merchant.transaction_count(@customer_2.id))
       end
