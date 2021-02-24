@@ -3,8 +3,10 @@ require 'csv'
 namespace :csv_load do
 
   def build(file, klass)
-    CSV.foreach(file, headers: true) do |row|
-      klass.create!(row.to_hash)
+    CSV.foreach(file, headers: true, header_converters: :symbol) do |row|
+      attributes = row.to_hash
+      attributes[:status].gsub!(' ', '_') unless attributes[:status].nil?
+      klass.create!(attributes)
     end
   end
 
