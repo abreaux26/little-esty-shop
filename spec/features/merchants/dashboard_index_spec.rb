@@ -5,20 +5,23 @@ RSpec.describe 'As a merchant' do
     @merchant = create(:merchant)
 
     @item = create(:item, merchant_id: @merchant.id)
+    @item2 = create(:item, merchant_id: @merchant.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
-    @invoice_1 = create(:invoice, customer_id: @customer_1.id)
+    @invoice_1 = create(:invoice, customer_id: @customer_1.id, status: :completed)
     @invoice_2 = create(:invoice, customer_id: @customer_1.id)
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
     @invoice_4 = create(:invoice, customer_id: @customer_1.id)
     @invoice_5 = create(:invoice, customer_id: @customer_1.id)
+    @invoice_6 = create(:invoice, customer_id: @customer_1.id)
 
-    @invoice_item_1 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_1.id)
+    @invoice_item_1 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_1.id, status: :pending)
     @invoice_item_2 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_2.id)
     @invoice_item_3 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_3.id)
     @invoice_item_4 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_4.id)
     @invoice_item_5 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_5.id)
+    @invoice_item_6 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice_6.id, status: :shipped)
 
     @transaction_1 = create(:transaction, result: 1, invoice_id: @invoice_1.id)
     @transaction_2 = create(:transaction, result: 1, invoice_id: @invoice_2.id)
@@ -176,6 +179,13 @@ RSpec.describe 'As a merchant' do
       within("#customer-#{@customer_5.id}") do
         expect(page).to have_content(@merchant.transaction_count(@customer_5.id))
       end
+    end
+
+    it 'I see a section for items ready to ship' do
+      visit merchant_dashboard_index_path(@merchant)
+
+      expect(page).to have_content("Items Ready to Ship")
+      expect(page).to have_link("Invoice ##{@invoice_1.id}")
     end
   end
 end

@@ -10,3 +10,9 @@
     <li id="customer-<%= customer.id %>"><%= customer.full_name %> - <%= @merchant.transaction_count(customer.id) %> Purchases</li>
   <% end %>
 </ol>
+
+<h2>Items Ready to Ship</h2>
+<% @items_ready_to_ship.each do |item| %>
+  <% invoice_id = @merchant.invoice_for_item_ready(item.id) %>
+  <%= item.name %> - <%= link_to "Invoice ##{invoice_id}", merchant_invoice_path(@merchant, Invoice.find(invoice_id)) %><br>
+<% end %>
