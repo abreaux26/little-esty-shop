@@ -1,11 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Merchant do
-  describe 'relationhips' do
-    it { should have_many :items }
-    it { should have_many(:invoice_items).through(:items)}
-  end
-
+RSpec.describe 'As a merchant' do
   before :each do
     @merchant = create(:merchant)
 
@@ -107,22 +102,80 @@ RSpec.describe Merchant do
     @transaction_54 = create(:transaction, result: 1, invoice_id: @invoice_54.id)
     @transaction_55 = create(:transaction, result: 0, invoice_id: @invoice_55.id)
 
-    customer_6 = create(:customer)
-    customer_7 = create(:customer)
-    customer_8 = create(:customer)
-    customer_9 = create(:customer)
-    customer_10 = create(:customer)
+    @customer_6 = create(:customer)
+    @customer_7 = create(:customer)
+    @customer_8 = create(:customer)
+    @customer_9 = create(:customer)
+    @customer_10 = create(:customer)
   end
 
-  describe 'instance methods' do
-    it 'finds the top five customers' do
-      expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
+  describe 'When I visit my merchant dashboard (/merchant/merchant_id/dashboard)' do
+    it 'I see the name of my merchant' do
+      visit merchant_dashboard_index_path(@merchant)
 
-      expect(@merchant.top_five_customers).to eq(expected)
+      expect(current_path).to eq("/merchants/#{@merchant.id}/dashboard")
+
+      expect(page).to have_content(@merchant.name)
     end
 
-    it 'finds transaction count given a customer_id' do
-      expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
+    it 'I see link to my merchant items index (/merchant/merchant_id/items)' do
+      visit merchant_dashboard_index_path(@merchant)
+
+      within(".nav") do
+        expect(page).to have_link('My Items')
+        click_link('My Items')
+        expect(current_path).to eq(merchant_items_path(@merchant))
+      end
+    end
+
+    it 'I see a link to my merchant invoices index (/merchant/merchant_id/invoices)' do
+      visit merchant_dashboard_index_path(@merchant)
+
+      within(".nav") do
+        expect(page).to have_link('My Invoices')
+        click_link('My Invoices')
+        expect(current_path).to eq(merchant_invoices_path(@merchant))
+      end
+    end
+
+    it 'I see top 5 customers full name' do
+      visit merchant_dashboard_index_path(@merchant)
+
+      expect(page).to have_content(@customer_1.full_name)
+      expect(page).to have_content(@customer_2.full_name)
+      expect(page).to have_content(@customer_3.full_name)
+      expect(page).to have_content(@customer_4.full_name)
+      expect(page).to have_content(@customer_5.full_name)
+
+      expect(page).not_to have_content(@customer_6.full_name)
+      expect(page).not_to have_content(@customer_7.full_name)
+      expect(page).not_to have_content(@customer_8.full_name)
+      expect(page).not_to have_content(@customer_9.full_name)
+      expect(page).not_to have_content(@customer_10.full_name)
+    end
+
+    it 'I see number of purches next to each customer' do
+      visit merchant_dashboard_index_path(@merchant)
+
+      within("#customer-#{@customer_1.id}") do
+        expect(page).to have_content(@merchant.transaction_count(@customer_1.id))
+      end
+
+      within("#customer-#{@customer_2.id}") do
+        expect(page).to have_content(@merchant.transaction_count(@customer_2.id))
+      end
+
+      within("#customer-#{@customer_3.id}") do
+        expect(page).to have_content(@merchant.transaction_count(@customer_3.id))
+      end
+
+      within("#customer-#{@customer_4.id}") do
+        expect(page).to have_content(@merchant.transaction_count(@customer_4.id))
+      end
+
+      within("#customer-#{@customer_5.id}") do
+        expect(page).to have_content(@merchant.transaction_count(@customer_5.id))
+      end
     end
   end
 end
