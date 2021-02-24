@@ -17,7 +17,7 @@ class Merchant < ApplicationRecord
   end
 
   def transaction_count(customer_id)
-    transactions.where(result: 1, invoice_id: Invoice.where(customer_id: customer_id)).size
+    transactions.where(result: 1, invoice_id: Invoice.find_from(customer_id)).size
   end
 
 
