@@ -16,6 +16,13 @@ RSpec.describe "Admin Dashboard" do
     @transaction_4 = create(:transaction, result: "success", invoice_id: @invoice_4.id)
     @transaction_5 = create(:transaction, result: "success", invoice_id: @invoice_5.id)
 
+    ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, status: "packaged")
+    ii_2 = create(:invoice_item, invoice_id: @invoice_1.id, status: "packaged")
+    ii_3 = create(:invoice_item, invoice_id: @invoice_2.id, status: "shipped")
+    ii_4 = create(:invoice_item, invoice_id: @invoice_2.id, status: "shipped")
+    ii_5 = create(:invoice_item, invoice_id: @invoice_3.id, status: "packaged")
+
+
     @customer_2 = create(:customer, first_name: "Eli")
     @invoice_21 = create(:invoice, customer_id: @customer_2.id)
     @invoice_22 = create(:invoice, customer_id: @customer_2.id)
@@ -28,6 +35,8 @@ RSpec.describe "Admin Dashboard" do
     @transaction_23 = create(:transaction, result: "failed", invoice_id: @invoice_23.id)
     @transaction_24 = create(:transaction, result: "success", invoice_id: @invoice_24.id)
     @transaction_25 = create(:transaction, result: "failed", invoice_id: @invoice_25.id)
+
+    ii_21 = create(:invoice_item, invoice_id: @invoice_24.id, status: "packaged")
 
     @customer_3 = create(:customer, first_name: "Danny")
     @invoice_31 = create(:invoice, customer_id: @customer_3.id)
@@ -120,6 +129,35 @@ RSpec.describe "Admin Dashboard" do
         expect(cust4).to be < cust3
         expect(cust4).to be < cust2
         expect(cust3).to be < cust2
+      end
+    end
+
+    describe "Incomplete Invoices" do
+
+      it "should list the ids and created date of the invoices that have
+      unshipped items" do
+        visit admin_index_path
+
+        within ".incomplete_invoices" do
+          expect(page).to have_content("#{@invoice_1.id}")
+          expect(page).to have_content("#{@invoice_3.id}")
+          expect(page).to have_content("#{@invoice_24.id}")
+          expect(page).to _not have_content("#{@invoice_2.id}")
+          expect(page).to _not have_content("#{@invoice_4.id}")
+        end
+      end
+      it "should display the date formatted like 'Monday, July 18, 2019'" do
+        visit admin_index_path
+
+        expect().to have_content()
+      end
+      it "should link to the admin/show page when the id is clicked" do
+        visit admin_index_path
+
+        expect().to have_content()
+      end
+      it "should list the invoice ids from oldest to newest" do
+
       end
     end
   end
