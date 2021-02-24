@@ -1,6 +1,22 @@
 <h1>Admin Dashboard</h1>
 
-<section class="Top Merchants">
-  
+<section class="navigation" id="merchants">
+  <%= form_with url: "/admin/merchants", method: :get do |form| %>
+    <%= form.submit "Merchants" %>
+  <% end %>
+</section>
 
+<section class="navigation" id="invoices">
+  <%= form_with url: "/admin/invoices", method: :get do |form| %>
+    <%= form.submit "Invoices" %>
+  <% end %>
+</section>
+
+<section class="top_customers">
+  <h2>Top Customers</h2>
+    <% @top_customers.each do |top_customer| %>
+      <%= top_customer.first_name %> <%= top_customer.last_name %> -
+      <%= top_customer.successful_transactions_count %> purchases
+      <br>
+    <% end %>
 </section>

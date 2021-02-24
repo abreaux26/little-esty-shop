@@ -1,5 +1,12 @@
 <h1><%= @merchant.name %></h1>
 <nav class="nav">
-  <%= link_to 'My Items', "/merchant/#{@merchant.id}/items"%>
-  <%= link_to 'My Invoices', "/merchant/#{@merchant.id}/invoices"%>
+  <%= link_to 'My Items', merchant_items_path(@merchant) %>
+  <%= link_to 'My Invoices', merchant_invoices_path(@merchant) %>
 </nav>
+
+<h2>Favorite Customers</h2>
+<ol>
+  <% @top_five_customers.each do |customer| %>
+    <li><%= customer.full_name %> - <%= @merchant.transaction_count(customer.id) %> Purchases<br><br></li>
+  <% end %>
+</ol>
