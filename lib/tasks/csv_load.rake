@@ -6,7 +6,6 @@ namespace :csv_load do
     CSV.foreach(file, headers: true, header_converters: :symbol) do |row|
       attributes = row.to_hash
       attributes[:status].gsub!(' ', '_') unless attributes[:status].nil?
-      # binding.pry
       klass.create!(attributes)
     end
   end
