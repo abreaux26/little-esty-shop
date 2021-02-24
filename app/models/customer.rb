@@ -7,8 +7,8 @@ class Customer < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
-  
+
   def self.all_successful_transactions_count
-    Customer.joins(:transactions).where("transactions.result = ?", 0).select("customers.*, count('transactions') as successful_transactions_count").group(:id)
+    Customer.joins(:transactions).where("transactions.result = ?", 1).select("customers.*, count('transactions') as successful_transactions_count").group(:id)
   end
 end
