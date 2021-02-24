@@ -20,3 +20,11 @@
       <br>
     <% end %>
 </section>
+
+<section class="incomplete_invoices">
+  <h2>Incomplete Invoices</h2>
+    <% @incomplete_invoices.each do |incomplete_invoice| %>
+      Invoice #<%= incomplete_invoice.id %>- <%= incomplete_invoice.created_at %>
+      <br>
+    <% end %>
+</section>
