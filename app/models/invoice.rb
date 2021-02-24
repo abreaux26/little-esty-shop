@@ -10,4 +10,7 @@ class Invoice < ApplicationRecord
     where(customer_id: customer_id)
   end
 
+  def self.all_invoices_with_unshipped_items
+    joins(:invoice_items).where('invoice_items.status = ?', 1).distinct(:id).order(:created_at)
+  end
 end
