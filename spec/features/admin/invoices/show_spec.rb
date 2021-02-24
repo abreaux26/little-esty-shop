@@ -12,7 +12,7 @@ RSpec.describe 'Admin invoices show page' do
 
 
         expect(page).to have_content(@invoice_1.id)
-        expect(page).to have_content(@invoice_1.status)
+        expect(page).to have_content(@invoice_1.status_view_format)
         expect(page).to have_content(@invoice_1.created_at.strftime('%A, %B %d, %Y'))
       end
     end
