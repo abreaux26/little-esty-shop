@@ -24,6 +24,19 @@ RSpec.describe Merchant, type: :model do
     it 'finds transaction count given a customer_id' do
       expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
     end
+
+    it 'returns items for the merchant that need to be shipped' do
+      expect(@merchant.invoice_items_ready).to eq([@invoice_item_1])
+      expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
+    end
+
+    it 'returns the invoice id for an item ready to ship' do
+      expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(sample_date.strftime('%A, %B %d, %Y'))
+    end
+  end
+
+  def sample_date
+    DateTime.new(2021, 01, 01)
   end
 
   def setup_data
@@ -33,7 +46,7 @@ RSpec.describe Merchant, type: :model do
     @item2 = create(:item, merchant_id: @merchant.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
-    @invoice_1 = create(:invoice, customer_id: @customer_1.id, status: :completed)
+    @invoice_1 = create(:invoice, customer_id: @customer_1.id, status: :completed, created_at: sample_date)
     @invoice_2 = create(:invoice, customer_id: @customer_1.id)
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
     @invoice_4 = create(:invoice, customer_id: @customer_1.id)
@@ -134,26 +147,5 @@ RSpec.describe Merchant, type: :model do
     @customer_8 = create(:customer)
     @customer_9 = create(:customer)
     @customer_10 = create(:customer)
-  end
-
-  describe 'instance methods' do
-    it 'finds the top five customers' do
-      expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
-
-      expect(@merchant.top_five_customers).to eq(expected)
-    end
-
-    it 'finds transaction count given a customer_id' do
-      expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
-    end
-
-    it 'returns items for the merchant that need to be shipped' do
-      expect(@merchant.invoice_items_ready).to eq([@invoice_item_1])
-      expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
-    end
-
-    it 'returns the invoice id for an item ready to ship' do
-      expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(Time.now.strftime('%A, %B %d, %Y'))
-    end
   end
 end
