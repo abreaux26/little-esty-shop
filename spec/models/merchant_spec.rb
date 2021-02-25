@@ -133,8 +133,8 @@ RSpec.describe Merchant do
       expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
     end
 
-    it 'returns the invoice id for an item ready to ship' do
-      expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(Time.now.strftime('%A, %B %d, %Y'))
+    it 'returns the date for an item ready to ship' do
+      expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(Time.now.utc.strftime('%A, %B %d, %Y'))
     end
   end
 end

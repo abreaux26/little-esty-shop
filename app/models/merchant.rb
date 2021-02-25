@@ -27,14 +27,6 @@ class Merchant < ApplicationRecord
                             .where('invoices.status = 1')
   end
 
-  def item_find(item_id)
-    find(item_id)
-  end
-
-  def invoice_find(invoice_id)
-    Invoice.find(invoice_id)
-  end
-
   def item_invoice_date(invoice_id)
     Invoice.find(invoice_id).created_at.strftime('%A, %B %d, %Y')
   end

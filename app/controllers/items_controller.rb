@@ -2,6 +2,8 @@ class ItemsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @items = @merchant.items
+    @enabled_items = @merchant.items.enabled
+    @disabled_items = @merchant.items.disabled
   end
 
   def show
@@ -20,7 +22,11 @@ class ItemsController < ApplicationController
     @item.update(item_params)
     if @item.save
       flash[:success] = "Your Item Has Been Updated"
-      redirect_to merchant_item_path(@merchant, @item)
+      if params[:status]
+        redirect_to merchant_items_path(@merchant)
+      else
+        redirect_to merchant_item_path(@merchant, @item)
+      end
     else
       flash[:error] = "Your Item Has Not Been Updated Due To Invalid Fields."
       render :edit
@@ -29,6 +35,6 @@ class ItemsController < ApplicationController
 
   private
   def item_params
-    params.permit(:name, :description, :unit_price)
+    params.permit(:name, :description, :unit_price, :status)
   end
 end
