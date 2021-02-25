@@ -5,8 +5,8 @@ RSpec.describe 'As a merchant' do
     @merchant = create(:merchant)
     @merchant2 = create(:merchant)
 
-    @item = create(:item, merchant_id: @merchant.id)
-    @item2 = create(:item, merchant_id: @merchant.id)
+    @item = create(:item, merchant_id: @merchant.id, status: :enabled)
+    @item2 = create(:item, merchant_id: @merchant.id, status: :disabled)
     @item3 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
@@ -127,9 +127,62 @@ RSpec.describe 'As a merchant' do
 
     it 'each item name is a link to that merchant items show page' do
       visit merchant_items_path(@merchant)
-      
+
       first(:link, "#{@item.name}").click
       expect(current_path).to eq(merchant_item_path(@merchant, @item))
+    end
+
+    it 'I see two sections, one for "Enabled Items" and one for "Disabled Items"' do
+      visit merchant_items_path(@merchant)
+
+      expect(page).to have_content("Enabled Items")
+      expect(page).to have_content("Disabled Items")
+    end
+
+    it 'I see a button to disable or enable next to each item.' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        expect(page).to have_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        expect(page).to have_button('Enable')
+      end
+    end
+
+    it 'I am redirected back to the items index after clicking enable/disable button' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        click_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        click_button('Enable')
+      end
+
+      expect(current_path).to eq(merchant_items_path(@merchant))
+    end
+
+    it 'I see that the items status has changed' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        click_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        click_button('Enable')
+      end
+
+      within("#item-#{@item.id}") do
+        expect(page).to have_button('Enable')
+      end
+
+      within("#item-#{@item2.id}") do
+        expect(page).to have_button('Disable')
+      end
     end
   end
 end

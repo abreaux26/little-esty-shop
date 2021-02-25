@@ -1,0 +1,6 @@
+<h1>Invoice # <%= @invoice.id %> - Admin Show Page</h1>
+
+<section id='invoice_info'>
+  <p>Status: <%= @invoice.status_view_format %></p>
+  <p>Date Created: <%= @invoice.created_at_view_format %></p>
+</section>

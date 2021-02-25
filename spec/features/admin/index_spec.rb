@@ -84,13 +84,12 @@ RSpec.describe "Admin Dashboard" do
     it "should have links to the Admin merchant and invoice index" do
       visit admin_index_path
 
-      click_button("Merchants")
+      click_link("Merchants")
       expect(current_path).to eq("/admin/merchants")
       visit admin_index_path
 
-      # click_button("Invoices")
-      # expect(current_path).to eq("/admin/invoices")
-
+      click_link("Invoices")
+      expect(current_path).to eq("/admin/invoices")
     end
   end
   describe "overall admin level statistics" do
