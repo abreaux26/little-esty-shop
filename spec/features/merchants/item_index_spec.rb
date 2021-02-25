@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe InvoiceItem do
-  describe 'relationhips' do
-    it { should belong_to :item }
-    it { should belong_to :invoice }
-  end
+RSpec.describe 'As a merchant' do
   before :each do
     @merchant = create(:merchant)
+    @merchant2 = create(:merchant)
 
-    @item = create(:item, merchant_id: @merchant.id)
-    @item2 = create(:item, merchant_id: @merchant.id)
+    @item = create(:item, merchant_id: @merchant.id, status: :enabled)
+    @item2 = create(:item, merchant_id: @merchant.id, status: :disabled)
+    @item3 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -116,13 +114,75 @@ RSpec.describe InvoiceItem do
     @customer_10 = create(:customer)
   end
 
-  describe 'instance methods' do
-    it 'returns an items id' do
-      expect(@invoice_item_1.item_find(@item.id)).to eq(@item)
+  describe 'when i visit a merchants items index page' do
+    it 'has merchant name and all a merchants items' do
+      visit merchant_items_path(@merchant)
+
+      expect(page).to have_content("#{@merchant.name}")
+      expect(page).to have_content("My Items")
+      expect(page).to have_link("#{@item.name}")
+      expect(page).to have_link("#{@item2.name}")
+      expect(page).to_not have_link("#{@item3.name}")
     end
 
-    it 'returns an invoices id' do
-      expect(@invoice_item_1.invoice_find(@invoice_1.id)).to eq(@invoice_1)
+    it 'each item name is a link to that merchant items show page' do
+      visit merchant_items_path(@merchant)
+
+      first(:link, "#{@item.name}").click
+      expect(current_path).to eq(merchant_item_path(@merchant, @item))
+    end
+
+    it 'I see two sections, one for "Enabled Items" and one for "Disabled Items"' do
+      visit merchant_items_path(@merchant)
+
+      expect(page).to have_content("Enabled Items")
+      expect(page).to have_content("Disabled Items")
+    end
+
+    it 'I see a button to disable or enable next to each item.' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        expect(page).to have_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        expect(page).to have_button('Enable')
+      end
+    end
+
+    it 'I am redirected back to the items index after clicking enable/disable button' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        click_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        click_button('Enable')
+      end
+
+      expect(current_path).to eq(merchant_items_path(@merchant))
+    end
+
+    it 'I see that the items status has changed' do
+      visit merchant_items_path(@merchant)
+
+      within("#item-#{@item.id}") do
+        click_button('Disable')
+      end
+
+      within("#item-#{@item2.id}") do
+        click_button('Enable')
+      end
+
+      within("#item-#{@item.id}") do
+        expect(page).to have_button('Enable')
+      end
+
+      within("#item-#{@item2.id}") do
+        expect(page).to have_button('Disable')
+      end
     end
   end
 end

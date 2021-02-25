@@ -37,6 +37,27 @@ RSpec.describe Invoice do
 
   end
 
+  describe 'instance methods' do
+    describe '#status_view_format' do
+      it "cleans up statuses so they are capitalize and have no symbols on view" do
+        invoice_a = create(:invoice, status: Invoice.statuses[:cancelled])
+        invoice_b = create(:invoice, status: Invoice.statuses[:completed])
+        invoice_c = create(:invoice, status: Invoice.statuses[:in_progress])
+
+        expect(invoice_a.status_view_format).to eq("Cancelled")
+        expect(invoice_b.status_view_format).to eq("Completed")
+        expect(invoice_c.status_view_format).to eq("In Progress")
+      end
+    end
+    describe '#created_at_view_format' do
+      it "cleans up statuses so they are capitalize and have no symbols on view" do
+        invoice_a = create(:invoice, created_at: Time.new(2021, 2, 24))
+
+        expect(invoice_a.created_at_view_format).to eq("Wednesday, February 24, 2021")
+      end
+    end
+  end
+
   describe 'class methods' do
     describe '::find_from(customer_id)' do
       it 'returns invoices that belong to a specific customer' do

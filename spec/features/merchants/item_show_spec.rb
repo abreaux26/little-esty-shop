@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe InvoiceItem do
-  describe 'relationhips' do
-    it { should belong_to :item }
-    it { should belong_to :invoice }
-  end
+RSpec.describe 'As a merchant' do
   before :each do
     @merchant = create(:merchant)
+    @merchant2 = create(:merchant)
 
     @item = create(:item, merchant_id: @merchant.id)
     @item2 = create(:item, merchant_id: @merchant.id)
+    @item3 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -116,13 +114,15 @@ RSpec.describe InvoiceItem do
     @customer_10 = create(:customer)
   end
 
-  describe 'instance methods' do
-    it 'returns an items id' do
-      expect(@invoice_item_1.item_find(@item.id)).to eq(@item)
-    end
+  describe 'when i visit a merchants items show page' do
+    it 'has merchant name and item names' do
+      visit merchant_item_path(@merchant, @item)
 
-    it 'returns an invoices id' do
-      expect(@invoice_item_1.invoice_find(@invoice_1.id)).to eq(@invoice_1)
+      expect(page).to have_content("#{@merchant.name}")
+      expect(page).to have_content("#{@item.name}")
+      expect(page).to have_content("Description: #{@item.description}")
+      expect(page).to have_content("Current Selling Price: #{@item.unit_price}")
+      expect(page).to have_button("Update Item")
     end
   end
 end

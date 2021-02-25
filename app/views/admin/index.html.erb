@@ -1,15 +1,11 @@
 <h1>Admin Dashboard</h1>
 
 <section class="navigation" id="merchants">
-  <%= form_with url: "/admin/merchants", method: :get do |form| %>
-    <%= form.submit "Merchants" %>
-  <% end %>
+  <%= link_to("Merchants", admin_merchants_path) %>
 </section>
 
 <section class="navigation" id="invoices">
-  <%= form_with url: "/admin/invoices", method: :get do |form| %>
-    <%= form.submit "Invoices" %>
-  <% end %>
+  <%= link_to("Invoices", admin_invoices_path) %>
 </section>
 
 <section class="top_customers">
@@ -24,7 +20,7 @@
 <section class="incomplete_invoices">
   <h2>Incomplete Invoices</h2>
     <% @incomplete_invoices.each do |incomplete_invoice| %>
-      Invoice #<a href="/admin/invoices/<%= incomplete_invoice.id %>"><%= incomplete_invoice.id %></a>- <%= incomplete_invoice.created_at.strftime('%A, %B %d, %Y') %>
+      Invoice #<a href="/admin/invoices/<%= incomplete_invoice.id %>"><%= incomplete_invoice.id %></a>- <%= incomplete_invoice.created_at_view_format %>
       <br>
     <% end %>
 </section>

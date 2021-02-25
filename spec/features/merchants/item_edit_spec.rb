@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe InvoiceItem do
-  describe 'relationhips' do
-    it { should belong_to :item }
-    it { should belong_to :invoice }
-  end
+RSpec.describe 'As a merchant' do
   before :each do
     @merchant = create(:merchant)
+    @merchant2 = create(:merchant)
 
     @item = create(:item, merchant_id: @merchant.id)
     @item2 = create(:item, merchant_id: @merchant.id)
+    @item3 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -116,13 +114,37 @@ RSpec.describe InvoiceItem do
     @customer_10 = create(:customer)
   end
 
-  describe 'instance methods' do
-    it 'returns an items id' do
-      expect(@invoice_item_1.item_find(@item.id)).to eq(@item)
+  describe 'when i visit a merchants items edit page' do
+    it 'has field to update item information and updates item show page' do
+      visit merchant_item_path(@merchant, @item)
+
+      click_button "Update Item"
+      expect(current_path).to eq(edit_merchant_item_path(@merchant, @item))
+
+      fill_in :name, with: "Updated Item"
+      fill_in :description, with: "Updated Item Description"
+      fill_in :unit_price, with: 75
+      click_button "Update"
+
+      expect(current_path).to eq(merchant_item_path(@merchant, @item))
+
+      expect(page).to have_content("Your Item Has Been Updated")
+      expect(page).to have_content("Updated Item")
+      expect(page).to have_content("Description: Updated Item Description")
+      expect(page).to have_content("Current Selling Price: 75.0")
     end
 
-    it 'returns an invoices id' do
-      expect(@invoice_item_1.invoice_find(@invoice_1.id)).to eq(@invoice_1)
+    it 'does not allow item to be updated if attributes are entered incorrectly' do
+      visit edit_merchant_item_path(@merchant, @item)
+
+      fill_in :name, with: "Up"
+      click_button "Update"
+      expect(page).to have_content("Your Item Has Not Been Updated Due To Invalid Fields.")
+
+      fill_in :name, with: "Updated Item"
+      fill_in :description, with: "Description"
+      click_button "Update"
+      expect(page).to have_content("Your Item Has Not Been Updated Due To Invalid Fields.")
     end
   end
 end
