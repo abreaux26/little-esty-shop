@@ -4,3 +4,8 @@
   <p>Status: <%= @invoice.status_view_format %></p>
   <p>Date Created: <%= @invoice.created_at_view_format %></p>
 </section>
+
+<h3>Customer Information:</h3>
+<section class='admin_invoice' id='customer_info'>
+  <p><%= @customer.full_name %></p>
+</section>
