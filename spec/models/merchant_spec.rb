@@ -41,10 +41,6 @@ RSpec.describe Merchant, type: :model do
     it 'returns total revenue for a merchants top five items' do
       expect(@merchant.top_five_items.first.total_revenue.to_f.round(2)).to eq(375.0)
     end
-
-    it 'returns the best day for a given merchants item' do
-      expect(@merchant.best_day(@item.id)).to eq(sample_date.strftime('%m/%d/%Y'))
-    end
   end
 
   def sample_date
