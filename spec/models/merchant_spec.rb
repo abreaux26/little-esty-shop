@@ -1,13 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe Merchant do
+RSpec.describe Merchant, type: :model do
+  before :each do
+    setup_data
+  end
+
   describe 'relationhips' do
     it { should have_many :items }
     it { should have_many(:invoice_items).through(:items)}
   end
 
-  before :each do
-    setup_data
+  describe 'validations' do
+    it { should define_enum_for(:status).with_values(disabled: 0, enabled: 1) }
   end
 
   describe 'instance methods' do

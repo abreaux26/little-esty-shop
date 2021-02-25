@@ -5,9 +5,11 @@ class Merchant < ApplicationRecord
   has_many :customers, through: :invoices
   has_many :transactions, through: :invoices
 
+  enum status: { disabled: 0, enabled: 1 }
+
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
-                           .where("transactions.result = ?", Transaction.results[:failed])
+                           .where("transactions.result = ?", Transaction.results[:success])
                            .group(:customer_id)
                            .order("count(transactions.result = #{Transaction.results[:success]}) desc", )
                            .limit(5)
