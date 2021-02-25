@@ -16,12 +16,12 @@ class Admin::MerchantsController < ApplicationController
 
     if params[:status]
       merchant.update!(status_param)
+      redirect_to admin_merchants_path
     else
       merchant.update!(merchant_params)
       flash[:notification] = 'Merchant successfully updated!'
+      redirect_to admin_merchant_path(merchant.id)
     end
-
-    redirect_to admin_merchants_path
   end
 
   private
