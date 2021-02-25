@@ -33,6 +33,28 @@ class ItemsController < ApplicationController
     end
   end
 
+  def new
+    @merchant = Merchant.find(params[:merchant_id])
+    @item = @merchant.items.new
+  end
+
+  def create
+    @merchant = Merchant.find(params[:merchant_id])
+    new_item_id = Item.max_id
+    @item = @merchant.items.new(id: new_item_id,
+                                name: item_params[:name],
+                                description: item_params[:description],
+                                unit_price: item_params[:unit_price]
+                              )
+    if @item.save
+      flash[:success] = "Your Item Has Been Created"
+      redirect_to merchant_items_path(@merchant)
+    else
+      flash[:error] = "Your Item Has Not Been Created Due To Invalid Fields."
+      render :new
+    end
+  end
+
   private
   def item_params
     params.permit(:name, :description, :unit_price, :status)

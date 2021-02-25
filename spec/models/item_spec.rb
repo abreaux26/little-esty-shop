@@ -26,5 +26,9 @@ RSpec.describe Item do
 
       expect(Item.disabled).to eq(expected)
     end
+
+    it 'returns max id plus 1' do
+      expect(Item.max_id).to eq(Item.maximum(:id) + 1)
+    end
   end
 end
