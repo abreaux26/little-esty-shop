@@ -1,5 +1,5 @@
 # Little Esty Shop
-
+*an ecommerce application for multiple vendors*
 ## Project Function (what it does)
   **Little Esty Shop** is an e-commerce rails web application that supports multiple merchants selling multiple items. There are both admin and merchant functionalities and statistics for the user.   
 
