@@ -15,8 +15,16 @@
 <section class="top_customers">
   <h2>Top Customers</h2>
     <% @top_customers.each do |top_customer| %>
-      <%= top_customer.first_name %> <%= top_customer.last_name %> -
+      <%= top_customer.full_name %> -
       <%= top_customer.successful_transactions_count %> purchases
+      <br>
+    <% end %>
+</section>
+
+<section class="incomplete_invoices">
+  <h2>Incomplete Invoices</h2>
+    <% @incomplete_invoices.each do |incomplete_invoice| %>
+      Invoice #<a href="/admin/invoices/<%= incomplete_invoice.id %>"><%= incomplete_invoice.id %></a>- <%= incomplete_invoice.created_at.strftime('%A, %B %d, %Y') %>
       <br>
     <% end %>
 </section>
