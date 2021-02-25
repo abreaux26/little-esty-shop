@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
     @items = @merchant.items
     @enabled_items = @merchant.items.enabled
     @disabled_items = @merchant.items.disabled
+    @top_five_items = @merchant.top_five_items
   end
 
   def show
