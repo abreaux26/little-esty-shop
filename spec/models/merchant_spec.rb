@@ -30,7 +30,7 @@ RSpec.describe Merchant, type: :model do
       expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
     end
 
-    it 'returns the invoice id for an item ready to ship' do
+    it 'returns the invoice date for an item ready to ship' do
       expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(sample_date.strftime('%A, %B %d, %Y'))
     end
   end
