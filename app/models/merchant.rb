@@ -21,4 +21,23 @@ class Merchant < ApplicationRecord
   def transaction_count(customer_id)
     transactions.where(result: Transaction.results[:success], invoice_id: Invoice.find_from(customer_id)).size
   end
+  
+  def invoice_items_ready
+    invoice_items.where.not(status: :shipped)
+                            .joins(:invoice)
+                            .order('invoices.created_at')
+                            .where('invoices.status = 1')
+  end
+
+  def item_find(item_id)
+    find(item_id)
+  end
+
+  def invoice_find(invoice_id)
+    Invoice.find(invoice_id)
+  end
+
+  def item_invoice_date(invoice_id)
+    Invoice.find(invoice_id).created_at.strftime('%A, %B %d, %Y')
+  end
 end
