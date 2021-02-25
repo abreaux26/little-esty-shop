@@ -4,6 +4,6 @@ class Item < ApplicationRecord
   belongs_to :merchant
 
   validates :name, presence: true, length: { minimum: 3 }
-  validates :description, presence: true, length: { maximum: 256 }
+  validates :description, presence: true, length: { minimum: 15, maximum: 256 }
   validates :unit_price, numericality: true
 end

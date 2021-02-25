@@ -19,12 +19,12 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:id])
     @item.update(item_params)
     if @item.save
-      flash[:success] = "You're Item Has Been Updated"
+      flash[:success] = "Your Item Has Been Updated"
       redirect_to merchant_item_path(@merchant, @item)
     else
       flash[:error] = "Your Item Has Not Been Updated Due To Invalid Fields."
       render :edit
-    end 
+    end
   end
 
   private
