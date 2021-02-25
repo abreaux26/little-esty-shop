@@ -47,11 +47,11 @@ The schema represents the relationships between the models in the database.
 ![](schema_lil_esty_shop.png)
 
 ## Useage
-- After installing, check that everything is functioning as expected. Run the rspec suite of tests.
+- After installing, check that everything is functioning as expected. Run the rspec suite of tests.  
       `$ bundle exec rspec`
-- To utlize this application, access either from local device
+- To utlize this application, access either from local device  
       `$ rails s`
-- Or access from the heroku application
+- Or access from the heroku application  
       `$ heroku open`
 
 ### Meta
