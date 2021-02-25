@@ -11,11 +11,7 @@ class Invoice < ApplicationRecord
   end
 
   def status_view_format
-    if status == "in_progress"
-      "In Progress"
-    else
-      status.capitalize
-    end
+    status.titleize
   end
 
   def created_at_view_format
