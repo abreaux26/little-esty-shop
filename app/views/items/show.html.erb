@@ -2,6 +2,6 @@
 
 <h2> <%= @item.name %> </h2>
 Description: <%= @item.description %><br><br>
-Current Selling Price: <%= @item.unit_price %><br><br>
+Current Selling Price: <%= @item.unit_price_fix %><br><br>
 
 <%= button_to "Update Item", edit_merchant_item_path(@merchant, @item), method: :get %>
