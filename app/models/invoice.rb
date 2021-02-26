@@ -21,4 +21,8 @@ class Invoice < ApplicationRecord
   def self.all_invoices_with_unshipped_items
     joins(:invoice_items).where('invoice_items.status = ?', 1).distinct(:id).order(:created_at)
   end
+
+  def self.find_from_merchant(merchant_id)
+    joins(:items).where('items.merchant_id = ?', merchant_id)
+  end
 end
