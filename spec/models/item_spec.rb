@@ -64,11 +64,11 @@ RSpec.describe Item do
     @invoice_item_5 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_5.id, quantity: 5, unit_price: 5)
     @invoice_item_6 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice_6.id, status: :shipped, quantity: 5, unit_price: 5)
 
-    @transaction_1 = create(:transaction, result: 1, invoice_id: @invoice_1.id, result: 1)
-    @transaction_2 = create(:transaction, result: 1, invoice_id: @invoice_2.id, result: 1)
-    @transaction_3 = create(:transaction, result: 1, invoice_id: @invoice_3.id, result: 1)
-    @transaction_4 = create(:transaction, result: 1, invoice_id: @invoice_4.id, result: 1)
-    @transaction_5 = create(:transaction, result: 1, invoice_id: @invoice_5.id, result: 1)
+    @transaction_1 = create(:transaction, result: 1, invoice_id: @invoice_1.id)
+    @transaction_2 = create(:transaction, result: 1, invoice_id: @invoice_2.id)
+    @transaction_3 = create(:transaction, result: 1, invoice_id: @invoice_3.id)
+    @transaction_4 = create(:transaction, result: 1, invoice_id: @invoice_4.id)
+    @transaction_5 = create(:transaction, result: 1, invoice_id: @invoice_5.id)
 
     @customer_2 = create(:customer, first_name: "Eli")
     @invoice_21 = create(:invoice, customer_id: @customer_2.id, created_at: sample_date)
