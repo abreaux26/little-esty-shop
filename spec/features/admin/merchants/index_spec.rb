@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Admin merchants index spec' do
   before :each do
-    @merchant1, @merchant2, @merchant3 = create_list(:merchant, 3)
-    @merchant4 = create(:merchant, status: :disabled)
-    @merchant5 = create(:merchant, status: :disabled)
-    @merchant6 = create(:merchant, status: :disabled)
+    @merchant1 = create(:merchant, status: :enabled)
+    @merchant2 = create(:merchant, status: :enabled)
+    @merchant3 = create(:merchant, status: :enabled)
+    @merchant4, @merchant5, @merchant6 = create_list(:merchant, 3)
   end
 
   describe 'as an admin' do
@@ -16,6 +16,9 @@ RSpec.describe 'Admin merchants index spec' do
         expect(page).to have_content(@merchant1.name)
         expect(page).to have_content(@merchant2.name)
         expect(page).to have_content(@merchant3.name)
+        expect(page).to have_content(@merchant4.name)
+        expect(page).to have_content(@merchant5.name)
+        expect(page).to have_content(@merchant6.name)
       end
     end
 

@@ -16,22 +16,22 @@ RSpec.describe Merchant, type: :model do
 
   describe 'class methods' do
     it '::by_status - enabled' do
-      enabled_merchant = create(:merchant)
-      disabled_merchant = create(:merchant, status: Merchant.statuses[:disabled])
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:enabled])
 
-      expect(Merchant.by_status(:enabled)).to eq([@merchant, enabled_merchant])
+      expect(Merchant.by_status(:enabled)).to eq([enabled_merchant])
     end
 
     it '::by_status - disabled' do
-      enabled_merchant = create(:merchant)
-      disabled_merchant = create(:merchant, status: Merchant.statuses[:disabled])
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:enabled])
 
-      expect(Merchant.by_status(:disabled)).to eq([disabled_merchant])
+      expect(Merchant.by_status(:disabled)).to eq([@merchant, disabled_merchant])
     end
 
     it '::by_status - <invalid>' do
-      enabled_merchant = create(:merchant)
-      disabled_merchant = create(:merchant, status: Merchant.statuses[:disabled])
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:disabled])
 
       expect(Merchant.by_status(:nonexistent)).to eq([])
     end
