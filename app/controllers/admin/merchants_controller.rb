@@ -1,6 +1,8 @@
 class Admin::MerchantsController < ApplicationController
   def index
     @merchants = Merchant.all
+    @enabled_merchants = Merchant.by_status(:enabled)
+    @disabled_merchants = Merchant.by_status(:disabled)
   end
 
   def show
@@ -22,6 +24,17 @@ class Admin::MerchantsController < ApplicationController
       flash[:notification] = 'Merchant successfully updated!'
       redirect_to admin_merchant_path(merchant.id)
     end
+  end
+
+  def new
+    @merchant = Merchant.new
+  end
+
+  def create
+    merchant = Merchant.new(merchant_params)
+    merchant.save
+
+    redirect_to admin_merchants_path
   end
 
   private

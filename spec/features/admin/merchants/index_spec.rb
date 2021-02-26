@@ -2,7 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Admin merchants index spec' do
   before :each do
-    @merchant1, @merchant2, @merchant3 = create_list(:merchant, 3)
+    @merchant1 = create(:merchant, status: :enabled)
+    @merchant2 = create(:merchant, status: :enabled)
+    @merchant3 = create(:merchant, status: :enabled)
+    @merchant4, @merchant5, @merchant6 = create_list(:merchant, 3)
   end
 
   describe 'as an admin' do
@@ -13,20 +16,31 @@ RSpec.describe 'Admin merchants index spec' do
         expect(page).to have_content(@merchant1.name)
         expect(page).to have_content(@merchant2.name)
         expect(page).to have_content(@merchant3.name)
+        expect(page).to have_content(@merchant4.name)
+        expect(page).to have_content(@merchant5.name)
+        expect(page).to have_content(@merchant6.name)
       end
     end
 
-    it 'names of merchants are links to their show page' do
+    it 'enabled merchants are grouped together' do
       visit admin_merchants_path
 
-      within('#all-merchants') do
-        expect(page).to have_link(@merchant1.name)
-        expect(page).to have_link(@merchant2.name)
-        expect(page).to have_link(@merchant3.name)
+      within('#enabled-merchants') do
+        expect(page).to have_content('Enabled Merchants')
+        expect(page).to have_content(@merchant1.name)
+        expect(page).to have_content(@merchant2.name)
+        expect(page).to have_content(@merchant3.name)
+      end
+    end
 
-        # Only testing one merchant
-        click_link @merchant1.name
-        expect(current_path).to eq admin_merchant_path(@merchant1)
+    it 'disabled merchants are grouped together' do
+      visit admin_merchants_path
+
+      within('#disabled-merchants') do
+        expect(page).to have_content('Disabled Merchants')
+        expect(page).to have_content(@merchant4.name)
+        expect(page).to have_content(@merchant5.name)
+        expect(page).to have_content(@merchant6.name)
       end
     end
 
@@ -48,6 +62,28 @@ RSpec.describe 'Admin merchants index spec' do
         expect(page).to have_button("disable-#{@merchant2.id}")
         expect(page).to have_button("disable-#{@merchant3.id}")
       end
+    end
+
+    it 'names of merchants are links to their show page' do
+      visit admin_merchants_path
+
+      within('#all-merchants') do
+        expect(page).to have_link(@merchant1.name)
+        expect(page).to have_link(@merchant2.name)
+        expect(page).to have_link(@merchant3.name)
+
+        # Only testing one merchant
+        click_link @merchant1.name
+        expect(current_path).to eq admin_merchant_path(@merchant1)
+      end
+    end
+
+    it 'shows link to create a new merchant' do
+      visit admin_merchants_path
+
+      expect(page).to have_link('New Merchant')
+      click_link('New Merchant')
+      expect(current_path).to eq(new_admin_merchant_path)
     end
   end
 end
