@@ -7,6 +7,11 @@ class Merchant < ApplicationRecord
 
   enum status: { disabled: 0, enabled: 1 }
 
+  def self.by_status(status)
+    return [] unless statuses.include?(status)
+    where(status: status)
+  end
+
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
                            .where("transactions.result = ?", Transaction.results[:success])

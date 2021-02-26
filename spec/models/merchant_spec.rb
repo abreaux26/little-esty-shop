@@ -14,6 +14,29 @@ RSpec.describe Merchant, type: :model do
     it { should define_enum_for(:status).with_values(disabled: 0, enabled: 1) }
   end
 
+  describe 'class methods' do
+    it '::by_status - enabled' do
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:enabled])
+
+      expect(Merchant.by_status(:enabled)).to eq([enabled_merchant])
+    end
+
+    it '::by_status - disabled' do
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:enabled])
+
+      expect(Merchant.by_status(:disabled)).to eq([@merchant, disabled_merchant])
+    end
+
+    it '::by_status - <invalid>' do
+      disabled_merchant = create(:merchant)
+      enabled_merchant = create(:merchant, status: Merchant.statuses[:disabled])
+
+      expect(Merchant.by_status(:nonexistent)).to eq([])
+    end
+  end
+
   describe 'instance methods' do
     it 'finds the top five customers' do
       expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
