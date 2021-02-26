@@ -68,6 +68,38 @@ RSpec.describe Invoice do
         expect(@invoice_1.customer_full_name).to eq(@customer_1.full_name)
       end
     end
+
+    describe '#items_on_invoice' do
+      it 'returns items that belong to a specific invoice' do
+        expected = [@item_1]
+
+        expect(@invoice_1.items_on_invoice(@merchant.id)).to eq(expected)
+      end
+    end
+
+    describe '#find_invoice_item' do
+      it 'returns items that belong to a specific invoice' do
+        expect(@invoice_1.find_invoice_item(@item_1.id)).to eq(@ii_1)
+      end
+    end
+
+    describe '#invoice_item_quantity' do
+      it 'returns invoice item quantity that belong to a specific invoice' do
+        expect(@invoice_1.invoice_item_quantity(@item_1.id)).to eq(@ii_1.quantity)
+      end
+    end
+
+    describe '#invoice_item_unit_price' do
+      it 'returns invoice item unit price that belong to a specific invoice' do
+        expect(@invoice_1.invoice_item_unit_price(@item_1.id)).to eq(@ii_1.unit_price_fix)
+      end
+    end
+
+    describe '#invoice_item_status' do
+      it 'returns invoice item status that belong to a specific invoice' do
+        expect(@invoice_1.invoice_item_status(@item_1.id)).to eq(@ii_1.status)
+      end
+    end
   end
 
   describe 'class methods' do

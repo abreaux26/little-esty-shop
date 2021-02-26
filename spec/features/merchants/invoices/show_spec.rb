@@ -2,17 +2,25 @@ require 'rails_helper'
 
 RSpec.describe 'As a merchant' do
   before :each do
-    @merchant = create(:merchant)
+    @merchant_1 = create(:merchant)
+    @merchant_2 = create(:merchant)
+
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
 
+    @item_1 = create(:item, merchant_id: @merchant_1.id)
+    @item_2 = create(:item, merchant_id: @merchant_2.id)
+
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
+
+    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged)
   end
 
   describe 'When I visit my merchants invoice show page(/merchants/merchant_id/invoices/invoice_id)' do
     it 'I see information related to that invoice' do
-      visit merchant_invoice_path(@merchant, @invoice_1)
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
 
       expect(page).to have_content(@invoice_1.id)
       expect(page).to have_content(@invoice_1.status)
@@ -20,10 +28,38 @@ RSpec.describe 'As a merchant' do
     end
 
     it 'I see all of the customer information related to that invoice' do
-      visit merchant_invoice_path(@merchant, @invoice_1)
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
 
       expect(page).to have_content(@customer_1.full_name)
       expect(page).not_to have_content(@customer_2.full_name)
+    end
+
+    it 'I see all of my items on the invoice' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      name = "Name: #{@item_1.name}"
+      quantity = "Quantity: #{@invoice_1.invoice_item_quantity(@item_1.id)}"
+      unit_price = "Sold For: $#{@invoice_1.invoice_item_unit_price(@item_1.id)}"
+      status = "Status: #{@invoice_1.invoice_item_status(@item_1.id).capitalize}"
+
+      expect(page).to have_content(name)
+      expect(page).to have_content(quantity)
+      expect(page).to have_content(unit_price)
+      expect(page).to have_content(status)
+    end
+
+    it 'I do not see any information related to Items for other merchants' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      name = "Name: #{@item_2.name}"
+      quantity = "Quantity: #{@invoice_2.invoice_item_quantity(@item_2.id)}"
+      unit_price = "Sold For: $#{@invoice_2.invoice_item_unit_price(@item_2.id)}"
+      status = "Status: #{@invoice_2.invoice_item_status(@item_2.id).capitalize}"
+
+      expect(page).not_to have_content(name)
+      expect(page).not_to have_content(quantity)
+      expect(page).not_to have_content(unit_price)
+      expect(page).not_to have_content(status)
     end
   end
 end
