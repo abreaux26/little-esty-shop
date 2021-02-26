@@ -41,20 +41,6 @@ RSpec.describe 'Admin merchants index spec' do
       end
     end
 
-    it 'names of merchants are links to their show page' do
-      visit admin_merchants_path
-
-      within('#all-merchants') do
-        expect(page).to have_link(@merchant1.name)
-        expect(page).to have_link(@merchant2.name)
-        expect(page).to have_link(@merchant3.name)
-
-        # Only testing one merchant
-        click_link @merchant1.name
-        expect(current_path).to eq admin_merchant_path(@merchant1)
-      end
-    end
-
     it 'shows button to enable/disable merchant next to their name' do
       visit admin_merchants_path
 
@@ -73,6 +59,28 @@ RSpec.describe 'Admin merchants index spec' do
         expect(page).to have_button("disable-#{@merchant2.id}")
         expect(page).to have_button("disable-#{@merchant3.id}")
       end
+    end
+
+    it 'names of merchants are links to their show page' do
+      visit admin_merchants_path
+
+      within('#all-merchants') do
+        expect(page).to have_link(@merchant1.name)
+        expect(page).to have_link(@merchant2.name)
+        expect(page).to have_link(@merchant3.name)
+
+        # Only testing one merchant
+        click_link @merchant1.name
+        expect(current_path).to eq admin_merchant_path(@merchant1)
+      end
+    end
+
+    it 'shows link to create a new merchant' do
+      visit admin_merchants_path
+
+      expect(page).to have_link('New Merchant')
+      click_link('New Merchant')
+      expect(current_path).to eq(new_admin_merchant_path)
     end
   end
 end
