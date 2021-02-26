@@ -23,7 +23,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.find_from_merchant(merchant_id)
-    joins(:items).where('items.merchant_id = ?', merchant_id)
+    joins(:items).where('items.merchant_id = ?', merchant_id).distinct
   end
 
   def customer_full_name
@@ -48,5 +48,9 @@ class Invoice < ApplicationRecord
 
   def invoice_item_status(item_id)
     find_invoice_item(item_id).status
+  end
+
+  def total_revenue
+    items.sum(:unit_price)
   end
 end
