@@ -128,7 +128,13 @@ RSpec.describe InvoiceItem do
   describe 'class methods' do
     describe '::search_for_quantity(invoiceid, itemid)' do
       it 'returns the quantity of a specific item on a specific invoice' do
-        expect(InvoiceItem.search_for_quantity(@invoice_1.id, @item.id)).to eq(100)
+        expect(InvoiceItem.search_for_quantity(@invoice_1.id, @item.id)).to eq(@invoice_item_1.quantity)
+      end
+    end
+
+    describe '::search_for_unit_price(invoiceid, itemid)' do
+      it 'returns the unit_price of a specific item on a specific invoice' do
+        expect(InvoiceItem.search_for_unit_price(@invoice_1.id, @item.id)).to eq(@invoice_item_1.unit_price)
       end
     end
   end
