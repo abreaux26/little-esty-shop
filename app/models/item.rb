@@ -11,10 +11,12 @@ class Item < ApplicationRecord
 
   def self.enabled
     where(status: :enabled)
+    .order(:id)
   end
 
   def self.disabled
     where(status: :disabled)
+    .order(:id)
   end
 
   def self.max_id
