@@ -25,4 +25,8 @@ class Invoice < ApplicationRecord
   def self.find_from_merchant(merchant_id)
     joins(:items).where('items.merchant_id = ?', merchant_id)
   end
+
+  def customer_full_name
+    customer.full_name
+  end
 end

@@ -54,11 +54,18 @@ RSpec.describe Invoice do
         expect(invoice_c.status_view_format).to eq("In Progress")
       end
     end
+
     describe '#created_at_view_format' do
       it "cleans up statuses so they are capitalize and have no symbols on view" do
         invoice_a = create(:invoice, created_at: Time.new(2021, 2, 24))
 
         expect(invoice_a.created_at_view_format).to eq("Wednesday, February 24, 2021")
+      end
+    end
+
+    describe '#customer_full_name' do
+      it 'returns customers full name' do
+        expect(@invoice_1.customer_full_name).to eq(@customer_1.full_name)
       end
     end
   end
