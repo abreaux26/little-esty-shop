@@ -16,4 +16,15 @@ class Item < ApplicationRecord
   def self.disabled
     where(status: :disabled)
   end
+
+  def self.max_id
+    maximum(:id) + 1
+  end
+
+  def best_day
+    invoices.order('invoices.created_at desc')
+            .first
+            .created_at
+            .strftime('%m/%d/%Y')
+  end
 end
