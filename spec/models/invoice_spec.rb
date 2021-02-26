@@ -9,6 +9,11 @@ RSpec.describe Invoice do
   end
 
   before :each do
+    @merchant = create(:merchant)
+
+    @item_1 = create(:item, merchant_id: @merchant.id)
+    @item_2 = create(:item, merchant_id: @merchant.id)
+
     @customer_1 = create(:customer, first_name: "Ace")
     @customer_2 = create(:customer, first_name: "Eli")
     @customer_3 = create(:customer)
@@ -18,8 +23,8 @@ RSpec.describe Invoice do
     @invoice_3 = create(:invoice, customer_id: @customer_1.id)
     @transaction_1 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_1.id)
     @transaction_2 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_2.id)
-    @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, status: InvoiceItem.statuses[:packaged])
-    @ii_2 = create(:invoice_item, invoice_id: @invoice_2.id, status: InvoiceItem.statuses[:shipped])
+    @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: InvoiceItem.statuses[:packaged])
+    @ii_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: InvoiceItem.statuses[:shipped])
     #customer_2 related vars
     @invoice_4 = create(:invoice, customer_id: @customer_2.id)
     @invoice_5 = create(:invoice, customer_id: @customer_2.id)
@@ -71,6 +76,14 @@ RSpec.describe Invoice do
       it 'returns all invoices with unshipped items' do
 
         expect(Invoice.all_invoices_with_unshipped_items).to eq([@invoice_1, @invoice_21])
+      end
+    end
+
+    describe '::find_from_merchant' do
+      it 'returns invoices that belong to a specific merchant' do
+        expected = [@invoice_1, @invoice_2]
+
+        expect(Invoice.find_from_merchant(@merchant)).to eq(expected)
       end
     end
   end
