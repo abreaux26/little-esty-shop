@@ -16,7 +16,7 @@ class Merchant < ApplicationRecord
     customer_ids = invoices.joins(:transactions)
                            .where("transactions.result = ?", Transaction.results[:success])
                            .group(:customer_id)
-                           .order("count(transactions.result = #{Transaction.results[:success]}) desc", )
+                           .order(Arel.sql("count(transactions.result = #{Transaction.results[:success]}) desc"))
                            .limit(5)
                            .pluck(:customer_id)
 
