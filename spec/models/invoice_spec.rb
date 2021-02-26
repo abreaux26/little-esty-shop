@@ -11,8 +11,9 @@ RSpec.describe Invoice do
   before :each do
     @merchant = create(:merchant)
 
-    @item_1 = create(:item, merchant_id: @merchant.id)
-    @item_2 = create(:item, merchant_id: @merchant.id)
+    @item_1 = create(:item, merchant_id: @merchant.id, unit_price: 1.00)
+    @item_2 = create(:item, merchant_id: @merchant.id, unit_price: 1.00)
+    @item_3 = create(:item, merchant_id: @merchant.id, unit_price: 2.00)
 
     @customer_1 = create(:customer, first_name: "Ace")
     @customer_2 = create(:customer, first_name: "Eli")
@@ -25,6 +26,7 @@ RSpec.describe Invoice do
     @transaction_2 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_2.id)
     @ii_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: InvoiceItem.statuses[:packaged])
     @ii_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: InvoiceItem.statuses[:shipped])
+    @ii_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, status: InvoiceItem.statuses[:shipped])
     #customer_2 related vars
     @invoice_4 = create(:invoice, customer_id: @customer_2.id)
     @invoice_5 = create(:invoice, customer_id: @customer_2.id)
@@ -71,7 +73,7 @@ RSpec.describe Invoice do
 
     describe '#items_on_invoice' do
       it 'returns items that belong to a specific invoice' do
-        expected = [@item_1]
+        expected = [@item_1, @item_3]
 
         expect(@invoice_1.items_on_invoice(@merchant.id)).to eq(expected)
       end
@@ -98,6 +100,12 @@ RSpec.describe Invoice do
     describe '#invoice_item_status' do
       it 'returns invoice item status that belong to a specific invoice' do
         expect(@invoice_1.invoice_item_status(@item_1.id)).to eq(@ii_1.status)
+      end
+    end
+
+    describe '#total_revenue' do
+      it 'returns total revenue from a specific invoice' do
+        expect('%.2f' % @invoice_1.total_revenue).to eq('3.00')
       end
     end
   end
