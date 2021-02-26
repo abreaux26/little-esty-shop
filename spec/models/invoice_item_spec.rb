@@ -137,5 +137,11 @@ RSpec.describe InvoiceItem do
         expect(InvoiceItem.search_for_unit_price(@invoice_1.id, @item.id)).to eq(@invoice_item_1.unit_price)
       end
     end
+
+    describe '::potential_revenu(invoiceid, itemid)' do
+      it 'returns the potential_revenu of a specific item on a specific invoice' do
+        expect(InvoiceItem.spotential_revenue(@invoice_1.id, @item.id)).to eq((@invoice_item_1.quantity * @item.unit_price))
+      end
+    end
   end
 end
