@@ -4,3 +4,11 @@
 
 <h2>Customer:</h2>
 <p><%= @invoice.customer_full_name %></p>
+
+<h2>Items on this Invoice:</h2>
+<% @items_on_invoice.each do |item| %>
+  <p>Name: <%= item.name %></p>
+  <p>Quantity: <%= @invoice.invoice_item_quantity(item.id) %></p>
+  <p>Sold For: $<%= @invoice.invoice_item_unit_price(item.id) %></p>
+  <p>Status: <%= @invoice.invoice_item_status(item.id).capitalize %></p>
+<% end %>

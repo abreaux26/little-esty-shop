@@ -22,5 +22,5 @@
 
 <h3>Top Five Items</h3>
 <% @top_five_items.each do |item| %>
-  <%= link_to "#{item.name}", merchant_item_path(@merchant, item) %> $<%= item.total_revenue %><br> Top Day For <%= item.name %> Was: <%= item.best_day %><br><br>
+  <%= link_to "#{item.name}", merchant_item_path(@merchant, item) %> $<%= '%.2f' % item.total_revenue %><br> Top Day For <%= item.name %> Was: <%= item.best_day %><br><br>
 <% end %>
