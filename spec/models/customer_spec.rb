@@ -28,6 +28,9 @@ RSpec.describe Customer do
     it 'returns full name of customer' do
       expect(@customer_1.full_name).to eq("Jimmy Johns")
     end
+    it 'returns transaction count for a specific customer' do
+      expect(@customer_1.transaction_count).to eq(2)
+    end
   end
 
   describe 'class methods' do

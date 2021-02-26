@@ -13,4 +13,8 @@ class Customer < ApplicationRecord
     .select("customers.*, count('transactions') as successful_transactions_count")
     .group(:id).order('successful_transactions_count desc').limit(5)
   end
+
+  def transaction_count
+    transactions.where(result: :success).size
+  end
 end

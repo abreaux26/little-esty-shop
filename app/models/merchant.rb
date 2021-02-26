@@ -13,18 +13,7 @@ class Merchant < ApplicationRecord
   end
 
   def top_five_customers
-    customer_ids = invoices.joins(:transactions)
-                           .where("transactions.result = ?", Transaction.results[:success])
-                           .group(:customer_id)
-                           .order(Arel.sql("count(transactions.result = #{Transaction.results[:success]}) desc"))
-                           .limit(5)
-                           .pluck(:customer_id)
-
-    Customer.find(customer_ids)
-  end
-
-  def transaction_count(customer_id)
-    transactions.where(result: Transaction.results[:success], invoice_id: Invoice.find_from(customer_id)).size
+    customers.all_successful_transactions_by_customer_count
   end
 
   def invoice_items_ready

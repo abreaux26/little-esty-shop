@@ -7,7 +7,7 @@
 <h2>Favorite Customers</h2>
 <ol>
   <% @top_five_customers.each do |customer| %>
-    <li id="customer-<%= customer.id %>"><%= customer.full_name %> - <%= @merchant.transaction_count(customer.id) %> Purchases</li>
+    <li id="customer-<%= customer.id %>"><%= customer.full_name %> - <%= customer.transaction_count %> Purchases</li>
   <% end %>
 </ol>
 
