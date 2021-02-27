@@ -21,6 +21,13 @@ class Merchant < ApplicationRecord
       .limit(5)
   end
 
+  def total_revenue
+    transactions
+      .where('transactions.result = ?', Transaction.results[:success])
+      .pluck(Arel.sql('sum(invoice_items.unit_price * invoice_items.quantity) as total_revenue'))
+      .first
+  end
+
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
                            .where("transactions.result = ?", Transaction.results[:success])

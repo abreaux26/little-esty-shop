@@ -72,6 +72,20 @@ RSpec.describe Merchant, type: :model do
       setup_merchant_and_customers
       expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(sample_date.strftime('%A, %B %d, %Y'))
     end
+
+    describe '#total_revenue' do
+      it 'calculates total revenue for a merchant' do
+        merchant_7_with_history
+
+        expect(@merchant_7.total_revenue).to eq(6)
+      end
+
+      it 'ignores failed transactions' do
+        merchant_5_with_history
+
+        expect(@merchant_5.total_revenue).to eq(50)
+      end
+    end
   end
 
   def sample_date
@@ -265,9 +279,13 @@ RSpec.describe Merchant, type: :model do
   def merchant_7_with_history
     @merchant_7 = create(:merchant, name: 'Merchant 7')
     customer = create(:customer)
-    item = @merchant_7.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 10)
-    invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
-    InvoiceItem.create!(invoice_id: invoice.id, item_id: item.id, quantity: 1, unit_price: 2)
-    Transaction.create!(invoice_id: invoice.id, result: Transaction.results[:success])
+    item_1 = @merchant_7.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
+    item_2 = @merchant_7.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
+    invoice_1 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
+    invoice_2 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
+    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 1, unit_price: 3)
+    InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 3)
+    Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_2.id, result: Transaction.results[:success])
   end
 end
