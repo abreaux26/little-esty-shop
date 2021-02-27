@@ -4,14 +4,13 @@ RSpec.describe "Admin Dashboard" do
   before :each do
     setup
   end
-  
+
   describe "displays basic information" do
     it "should have a header indicating it is the Admin Dashboard" do
       visit admin_index_path
 
       expect(page).to have_content("Admin Dashboard")
     end
-
     it "should have links to the Admin merchant and invoice index" do
       visit admin_index_path
 
@@ -23,6 +22,7 @@ RSpec.describe "Admin Dashboard" do
       expect(current_path).to eq("/admin/invoices")
     end
   end
+  
   describe "overall admin level statistics" do
     describe "top customer" do
       it "should list the top 5 customers (largest no. of successful transactions)" do
@@ -48,13 +48,11 @@ RSpec.describe "Admin Dashboard" do
     end
 
     describe "Incomplete Invoices" do
-
       it "should list the ids and created date of the invoices that have
       unshipped items" do
         visit admin_index_path
 
         within ".incomplete_invoices" do
-
           expect(page).to have_content("#{@invoice_1.id}")
           expect(page).to have_content("#{@invoice_3.id}")
           expect(page).to have_content("#{@invoice_24.id}")
@@ -84,6 +82,7 @@ RSpec.describe "Admin Dashboard" do
       end
     end
   end
+
   def setup
     @customer_1 = create(:customer, first_name: "Ace")
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
