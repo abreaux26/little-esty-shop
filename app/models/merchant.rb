@@ -12,6 +12,15 @@ class Merchant < ApplicationRecord
     where(status: status)
   end
 
+  def self.top_five_by_revenue
+    joins(:transactions)
+      .where('transactions.result = ?', Transaction.results[:success])
+      .group(:id)
+      .select('merchants.name, sum(invoice_items.unit_price * invoice_items.quantity) as merchant_revenue')
+      .order('merchant_revenue desc')
+      .limit(5)
+  end
+
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
                            .where("transactions.result = ?", Transaction.results[:success])
