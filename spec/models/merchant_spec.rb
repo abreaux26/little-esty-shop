@@ -39,13 +39,12 @@ RSpec.describe Merchant, type: :model do
     end
 
     describe '::top_five_by_revenue' do
-      xit 'shows top five merchants by total revenue earned on successful transactions' do
-        top_five_revenue_setup
+      it 'shows top five merchants by total revenue earned on successful transactions' do
+        setup_top_five_revenue
         expected_names = [@merchant_5.name, @merchant_4.name, @merchant_3.name, @merchant_2.name, @merchant_1.name]
         actual_names = Merchant.top_five_by_revenue.map(&:name)
-        require "pry"; binding.pry
 
-        expect(Merchant.top_five_by_revenue).to eq(expected)
+        expect(actual_names).to eq(expected_names)
       end
     end
   end
@@ -189,7 +188,7 @@ RSpec.describe Merchant, type: :model do
     @customer_10 = create(:customer)
   end
 
-  def top_five_revenue_setup
+  def setup_top_five_revenue
     merchant_1_with_history
     merchant_2_with_history
     merchant_3_with_history
