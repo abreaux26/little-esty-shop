@@ -126,14 +126,6 @@ RSpec.describe Invoice do
   end
 
   describe 'class methods' do
-    describe '::find_from(customer_id)' do
-      it 'returns invoices that belong to a specific customer' do
-        expected = [@invoice_1, @invoice_2, @invoice_3]
-
-        expect(Invoice.find_from(@customer_1.id).to_a).to eq(expected)
-      end
-    end
-
     describe '::all_invoices_with_unshipped_items' do
       it 'returns all invoices with unshipped items' do
 

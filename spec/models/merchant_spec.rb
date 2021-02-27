@@ -44,10 +44,6 @@ RSpec.describe Merchant, type: :model do
       expect(@merchant.top_five_customers).to eq(expected)
     end
 
-    it 'finds transaction count given a customer_id' do
-      expect(@merchant.transaction_count(@customer_1.id)).to eq(5)
-    end
-
     it 'returns items for the merchant that need to be shipped' do
       expect(@merchant.invoice_items_ready).to eq([@invoice_item_1])
       expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)

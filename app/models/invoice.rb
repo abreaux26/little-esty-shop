@@ -6,10 +6,6 @@ class Invoice < ApplicationRecord
 
   enum status: [:cancelled, :completed, :in_progress]
 
-  def self.find_from(customer_id)
-    where(customer_id: customer_id)
-  end
-
   def status_view_format
     status.titleize
   end
@@ -27,7 +23,7 @@ class Invoice < ApplicationRecord
   def self.total_revenue(id)
      Invoice.joins(:invoice_items)
             .select("invoices.*, count('quantity*unit_price') as total_revenue")
-            .group(:id).find(id).total_revenue
+            .group(:id).find(id).total_revenue.first
   end
 
   def self.find_from_merchant(merchant_id)
