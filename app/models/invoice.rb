@@ -23,7 +23,7 @@ class Invoice < ApplicationRecord
   def self.total_revenue(id)
      Invoice.joins(:invoice_items)
             .select("invoices.*, count('quantity*unit_price') as total_revenue")
-            .group(:id).find(id).total_revenue
+            .group(:id).find(id).total_revenue.first
   end
 
   def self.find_from_merchant(merchant_id)
