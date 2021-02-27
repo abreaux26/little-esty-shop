@@ -3,6 +3,7 @@
 <section id='invoice_info'>
   <p>Status: <%= @invoice.status_view_format %></p>
   <p>Date Created: <%= @invoice.created_at_view_format %></p>
+  <p>Total Revenue: <%= number_to_currency((@invoice.total_revenue[0])) %></p>
 </section>
 
 <h3>Customer Information:</h3>
