@@ -31,7 +31,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.find_from_merchant(merchant_id)
-    joins(:items).where('items.merchant_id = ?', merchant_id)
+    joins(:items).where('items.merchant_id = ?', merchant_id).distinct
   end
 
   def customer_full_name
@@ -56,5 +56,9 @@ class Invoice < ApplicationRecord
 
   def invoice_item_status(item_id)
     find_invoice_item(item_id).status
+  end
+
+  def total_revenue
+    invoice_items.pluck(Arel.sql("sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue"))
   end
 end
