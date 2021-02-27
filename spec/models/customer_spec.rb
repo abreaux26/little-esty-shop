@@ -25,8 +25,10 @@ RSpec.describe Customer do
   end
 
   describe 'instance methods' do
-    it 'returns full name of customer' do
-      expect(@customer_1.full_name).to eq("Jimmy Johns")
+    describe '#full_name' do
+      it 'returns full name of customer' do
+        expect(@customer_1.full_name).to eq("Jimmy Johns")
+      end
     end
   end
 

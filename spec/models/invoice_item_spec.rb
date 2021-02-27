@@ -20,7 +20,7 @@ RSpec.describe InvoiceItem do
     @invoice_5 = create(:invoice, customer_id: @customer_1.id)
     @invoice_6 = create(:invoice, customer_id: @customer_1.id)
 
-    @invoice_item_1 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_1.id, status: :pending)
+    @invoice_item_1 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_1.id, status: :pending, quantity:100)
     @invoice_item_2 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_2.id)
     @invoice_item_3 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_3.id)
     @invoice_item_4 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_4.id)
@@ -123,6 +123,25 @@ RSpec.describe InvoiceItem do
 
     it 'returns an invoices id' do
       expect(@invoice_item_1.invoice_find(@invoice_1.id)).to eq(@invoice_1)
+    end
+  end
+  describe 'class methods' do
+    describe '::search_for_quantity(invoiceid, itemid)' do
+      it 'returns the quantity of a specific item on a specific invoice' do
+        expect(InvoiceItem.search_for_quantity(@invoice_1.id, @item.id)).to eq(@invoice_item_1.quantity)
+      end
+    end
+
+    describe '::search_for_unit_price(invoiceid, itemid)' do
+      it 'returns the unit_price of a specific item on a specific invoice' do
+        expect(InvoiceItem.search_for_unit_price(@invoice_1.id, @item.id)).to eq(@invoice_item_1.unit_price)
+      end
+    end
+
+    describe '::potential_revenu(invoiceid, itemid)' do
+      it 'returns the potential_revenu of a specific item on a specific invoice' do
+        expect(InvoiceItem.potential_revenue(@invoice_1.id, @item.id)).to eq((@invoice_item_1.quantity * @invoice_item_1.unit_price))
+      end
     end
   end
 end
