@@ -2,14 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Admin invoices show page' do
   before :each do
-    @customer_1 = create(:customer)
-    @invoice_1 = create(:invoice, customer_id: @customer_1.id)
-    @item_1 = create(:item)
-    @item_2 = create(:item)
-    @item_3 = create(:item)
-    @invoice_1.items << @item_1
-    @invoice_1.items << @item_2
-    @invoice_1.items << @item_3
+    setup
   end
 
   describe 'as an admin' do
@@ -17,10 +10,14 @@ RSpec.describe 'Admin invoices show page' do
       it 'like id, status, created_at in Day, Month DD, YYYY' do
         visit admin_invoice_path(@invoice_1)
 
-
         expect(page).to have_content(@invoice_1.id)
         expect(page).to have_content(@invoice_1.status_view_format)
         expect(page).to have_content(@invoice_1.created_at.strftime('%A, %B %d, %Y'))
+      end
+      it 'displays the total revenue of the invoice' do
+        visit admin_invoice_path(@invoice_1)
+
+        expect(page).to have_content("#{'%.2f' % @invoice_1.total_revenue}")
       end
     end
 
@@ -30,7 +27,6 @@ RSpec.describe 'Admin invoices show page' do
 
         within '.admin_invoice#customer_info' do
           expect(page).to have_content(@customer_1.full_name)
-          # expect(page).to have_content(@customer_1.shipping_address)
         end
       end
     end
@@ -52,5 +48,16 @@ RSpec.describe 'Admin invoices show page' do
         end
       end
     end
+  end
+
+  def setup
+    @customer_1 = create(:customer)
+    @invoice_1 = create(:invoice, customer_id: @customer_1.id)
+    @item_1 = create(:item)
+    @item_2 = create(:item)
+    @item_3 = create(:item)
+    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
   end
 end
