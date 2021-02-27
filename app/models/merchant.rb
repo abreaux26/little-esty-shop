@@ -16,7 +16,7 @@ class Merchant < ApplicationRecord
     joins(:transactions)
       .where('transactions.result = ?', Transaction.results[:success])
       .group(:id)
-      .select('merchants.name, sum(invoice_items.unit_price * invoice_items.quantity) as merchant_revenue')
+      .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) as merchant_revenue')
       .order('merchant_revenue desc')
       .limit(5)
   end
