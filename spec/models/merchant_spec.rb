@@ -199,7 +199,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_1_with_history
-    @merchant_1 = create(:merchant, name: 'Merchant One')
+    @merchant_1 = create(:merchant, name: 'Merchant 1')
     customer = create(:customer)
     item = @merchant_1.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 10)
     invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
@@ -208,7 +208,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_2_with_history
-    @merchant_2 = create(:merchant, name: 'Merchant Two')
+    @merchant_2 = create(:merchant, name: 'Merchant 2')
     customer = create(:customer)
     item = @merchant_2.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 10)
     invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
@@ -217,7 +217,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_3_with_history
-    @merchant_3 = create(:merchant, name: 'Merchant Three')
+    @merchant_3 = create(:merchant, name: 'Merchant 3')
     customer = create(:customer)
     item = @merchant_3.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 20)
     invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
@@ -226,7 +226,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_4_with_history
-    @merchant_4 = create(:merchant, name: 'Merchant Four')
+    @merchant_4 = create(:merchant, name: 'Merchant 4')
     customer = create(:customer)
     item_1 = @merchant_4.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
     item_2 = @merchant_4.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
@@ -240,7 +240,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_5_with_history
-    @merchant_5 = create(:merchant, name: 'Merchant Five')
+    @merchant_5 = create(:merchant, name: 'Merchant 5')
     customer = create(:customer)
     item_1 = @merchant_5.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
     item_2 = @merchant_5.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
@@ -254,7 +254,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_6_with_history
-    @merchant_6 = create(:merchant, name: 'Merchant Six')
+    @merchant_6 = create(:merchant, name: 'Merchant 6')
     customer = create(:customer)
     item = @merchant_6.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 10)
     invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])
@@ -263,7 +263,7 @@ RSpec.describe Merchant, type: :model do
   end
 
   def merchant_7_with_history
-    @merchant_7 = create(:merchant, name: 'Merchant Seven')
+    @merchant_7 = create(:merchant, name: 'Merchant 7')
     customer = create(:customer)
     item = @merchant_7.items.create!(name: 'Item', description: 'foo bar baz quux', unit_price: 10)
     invoice = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed])

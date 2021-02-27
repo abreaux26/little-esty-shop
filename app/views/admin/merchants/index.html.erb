@@ -24,3 +24,12 @@
     <% end %>
   </section>
 </section>
+
+<aside id='top-merchants'>
+  <header><h3>Top Five Merchants</h3></header>
+  <ol>
+    <% @top_five_merchants.each do |merchant| %>
+      <li class='top-merchant'><%= merchant.name %></li>
+    <% end %>
+  </ol>
+</aside>
