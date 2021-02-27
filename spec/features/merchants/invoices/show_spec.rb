@@ -70,5 +70,30 @@ RSpec.describe 'As a merchant' do
 
       expect(page).to have_content(total_revenue)
     end
+
+    it 'for each item there is a status drop down' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_button("Update Item Status")
+
+        select("packaged", from: "status")
+        click_on "Update Item Status"
+      end
+
+      expect(current_path).to eq(merchant_invoice_path(@merchant_1, @invoice_1))
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_content("Status: Packaged")
+      end
+    end
+
+    it 'current item status is selected by default' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_select('status', selected: 'pending')
+      end
+    end
   end
 end
