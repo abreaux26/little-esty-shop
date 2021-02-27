@@ -15,7 +15,15 @@ class Invoice < ApplicationRecord
   end
 
   def self.all_invoices_with_unshipped_items
-    joins(:invoice_items).where('invoice_items.status = ?', 1).distinct(:id).order(:created_at)
+    joins(:invoice_items)
+    .where('invoice_items.status = ?', 1)
+    .distinct(:id).order(:created_at)
+  end
+
+  def self.total_revenue(id)
+     Invoice.joins(:invoice_items)
+            .select("invoices.*, count('quantity*unit_price') as total_revenue")
+            .group(:id).find(id).total_revenue
   end
 
   def self.find_from_merchant(merchant_id)
