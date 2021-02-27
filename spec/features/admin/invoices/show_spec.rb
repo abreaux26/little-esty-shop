@@ -48,6 +48,24 @@ RSpec.describe 'Admin invoices show page' do
         end
       end
     end
+    describe "you can update an invoice status" do
+      it 'has the invoice status as a select field with the current invoice selected' do
+        visit admin_invoice_path(@invoice_2)
+        # I see the invoice status is a select field
+        # And I see that the invoice's current status is selected
+      end
+      it 'can pick a new status for the Invoice and see it updated on the Admin Invoice Show Page' do
+        visit admin_invoice_path(@invoice_2)
+        expect(page).to have_content(@invoice_2.status_view_format)
+        expect(page).to have_content("SELECT FIELD")
+        # When I click this select field,
+        # Then I can select a new status for the Invoice,
+        # And next to the select field I see a button to "Update Invoice Status"
+        click_bitton("Update Invoice Status")
+        expect(path).to eq(admin_invoice_path(@invoice_1))
+        expect(page).to have_content("new status selection")
+      end
+    end
   end
 
   def setup
@@ -59,5 +77,6 @@ RSpec.describe 'Admin invoices show page' do
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
+    @invoice_2 = create(:invoice, status: :in_progress)
   end
 end
