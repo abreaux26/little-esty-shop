@@ -14,25 +14,40 @@ class Merchant < ApplicationRecord
 
   def self.top_five_by_revenue
     joins(:transactions)
+      .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) as merchant_revenue')
       .where('transactions.result = ?', Transaction.results[:success])
       .group(:id)
-      .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) as merchant_revenue')
       .order('merchant_revenue desc')
       .limit(5)
   end
 
   def total_revenue
-    transactions
-      .where('transactions.result = ?', Transaction.results[:success])
-      .pluck(Arel.sql('sum(invoice_items.unit_price * invoice_items.quantity) as total_revenue'))
-      .first
+    revenue_snippet = Arel.sql('sum(invoice_items.unit_price * invoice_items.quantity)')
+
+    transactions.where('transactions.result = ?', Transaction.results[:success])
+                .pluck(revenue_snippet)
+                .first
+  end
+
+  def best_day
+    revenue_snippet = Arel.sql('sum(invoice_items.unit_price * invoice_items.quantity)')
+    order_by_revenue_snippet = Arel.sql(revenue_snippet + ' desc')
+
+    invoices.select(:created_at, revenue_snippet)
+            .joins(:transactions)
+            .where('transactions.result = ?', Transaction.results[:success])
+            .group(:created_at)
+            .order(order_by_revenue_snippet, created_at: :desc)
+            .limit(1)
+            .pluck(:created_at)
+            .first
   end
 
   def top_five_customers
     customer_ids = invoices.joins(:transactions)
                            .where("transactions.result = ?", Transaction.results[:success])
                            .group(:customer_id)
-                           .order("count(transactions.result = #{Transaction.results[:success]}) desc", )
+                           .order(Arel.sql("count(transactions.result = #{Transaction.results[:success]}) desc"))
                            .limit(5)
                            .pluck(:customer_id)
 

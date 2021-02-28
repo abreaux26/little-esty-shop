@@ -86,6 +86,26 @@ RSpec.describe Merchant, type: :model do
         expect(@merchant_5.total_revenue).to eq(50)
       end
     end
+
+    describe '#top_selling_date' do
+      it 'finds top revenue day by invoice date' do
+        merchant_8_with_history
+
+        expect(@merchant_8.best_day).to eq(sample_date)
+      end
+
+      it 'returns most recent day if there is a tie' do
+        merchant_9_with_history
+
+        expect(@merchant_9.best_day).to eq(sample_date)
+      end
+
+      it 'ignores failed transactions' do
+        merchant_10_with_history
+
+        expect(@merchant_10.best_day).to eq(sample_date)
+      end
+    end
   end
 
   def sample_date
@@ -287,5 +307,53 @@ RSpec.describe Merchant, type: :model do
     InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 3)
     Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])
     Transaction.create!(invoice_id: invoice_2.id, result: Transaction.results[:success])
+  end
+
+  def merchant_8_with_history
+    # Merchant w/ best revenue day of `sample_date`
+    @merchant_8 = create(:merchant, name: 'Merchant 8')
+    customer = create(:customer)
+    item_1 = @merchant_8.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
+    item_2 = @merchant_8.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
+    invoice_1 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date + 1))
+    invoice_2 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date + 1))
+    invoice_3 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: sample_date)
+    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 10)
+    InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 20)
+    InvoiceItem.create!(invoice_id: invoice_3.id, item_id: item_1.id, quantity: 2, unit_price: 50)
+    Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_2.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_3.id, result: Transaction.results[:success])
+  end
+
+  def merchant_9_with_history
+    # Merchant w/ tie for best revenue days
+    @merchant_9 = create(:merchant, name: 'Merchant 9')
+    customer = create(:customer)
+    item_1 = @merchant_9.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
+    item_2 = @merchant_9.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
+    invoice_1 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date))
+    invoice_2 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date - 1))
+    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 10)
+    InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 20)
+    Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_2.id, result: Transaction.results[:success])
+  end
+
+  def merchant_10_with_history
+    # Merchant w/ failed transaction on what would've been their best revenue day if the transaction succeeded
+    @merchant_10 = create(:merchant, name: 'Merchant 10')
+    customer = create(:customer)
+    item_1 = @merchant_10.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10)
+    item_2 = @merchant_10.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20)
+    invoice_1 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: sample_date)
+    invoice_2 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: sample_date)
+    invoice_3 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date + 1))
+    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 10)
+    InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 20)
+    InvoiceItem.create!(invoice_id: invoice_3.id, item_id: item_1.id, quantity: 10, unit_price: 10)
+    Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_2.id, result: Transaction.results[:success])
+    Transaction.create!(invoice_id: invoice_3.id, result: Transaction.results[:failed])
   end
 end
