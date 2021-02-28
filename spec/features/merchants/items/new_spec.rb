@@ -3,9 +3,11 @@ require 'rails_helper'
 RSpec.describe 'As a merchant' do
   before :each do
     @merchant = create(:merchant)
+    @merchant2 = create(:merchant)
 
-    @item = create(:item, merchant_id: @merchant.id)
-    @item2 = create(:item, merchant_id: @merchant.id)
+    @item = create(:item, merchant_id: @merchant.id, status: :enabled)
+    @item2 = create(:item, merchant_id: @merchant.id, status: :disabled)
+    @item3 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -112,80 +114,67 @@ RSpec.describe 'As a merchant' do
     @customer_10 = create(:customer)
   end
 
-  describe 'When I visit my merchant dashboard (/merchant/merchant_id/dashboard)' do
-    it 'I see the name of my merchant' do
-      visit merchant_dashboard_index_path(@merchant)
+  describe 'When I visit my items index page' do
+    it 'I see a link to create a new item.' do
+      visit merchant_items_path(@merchant)
 
-      expect(current_path).to eq("/merchants/#{@merchant.id}/dashboard")
-
-      expect(page).to have_content(@merchant.name)
+      expect(page).to have_link("New Item")
     end
 
-    it 'I see link to my merchant items index (/merchant/merchant_id/items)' do
-      visit merchant_dashboard_index_path(@merchant)
+    it 'When I click "New Item",I am taken to a form' do
+      visit merchant_items_path(@merchant)
 
-      within(".nav") do
-        expect(page).to have_link('My Items')
-        click_link('My Items')
-        expect(current_path).to eq(merchant_items_path(@merchant))
-      end
+      click_link("New Item")
+      expect(current_path).to eq(new_merchant_item_path(@merchant))
+      expect(page).to have_button("Submit")
+    end
+  end
+
+  describe 'When I am on my items new page' do
+    it 'I click "Submit" and am taken back to the items index page' do
+      visit new_merchant_item_path(@merchant)
+
+      fill_in :name, with: 'Thing'
+      fill_in :description, with: 'this is a very long description'
+      fill_in :unit_price, with: 5.50
+
+      click_button("Submit")
+      expect(current_path).to eq(merchant_items_path(@merchant))
     end
 
-    it 'I see a link to my merchant invoices index (/merchant/merchant_id/invoices)' do
-      visit merchant_dashboard_index_path(@merchant)
+    it 'I see the item I just created displayed in the list of items.' do
+      visit new_merchant_item_path(@merchant)
 
-      within(".nav") do
-        expect(page).to have_link('My Invoices')
-        click_link('My Invoices')
-        expect(current_path).to eq(merchant_invoices_path(@merchant))
-      end
+      fill_in :name, with: 'Thing'
+      fill_in :description, with: 'this is a very long description'
+      fill_in :unit_price, with: 5.50
+
+      click_button("Submit")
+
+      expect(page).to have_link("Thing")
     end
 
-    it 'I see top 5 customers full name' do
-      visit merchant_dashboard_index_path(@merchant)
+    it 'I see my item was created with a default status of disabled.' do
+      visit new_merchant_item_path(@merchant)
 
-      expect(page).to have_content(@customer_1.full_name)
-      expect(page).to have_content(@customer_2.full_name)
-      expect(page).to have_content(@customer_3.full_name)
-      expect(page).to have_content(@customer_4.full_name)
-      expect(page).to have_content(@customer_5.full_name)
+      fill_in :name, with: 'Thing'
+      fill_in :description, with: 'this is a very long description'
+      fill_in :unit_price, with: 5.50
 
-      expect(page).not_to have_content(@customer_6.full_name)
-      expect(page).not_to have_content(@customer_7.full_name)
-      expect(page).not_to have_content(@customer_8.full_name)
-      expect(page).not_to have_content(@customer_9.full_name)
-      expect(page).not_to have_content(@customer_10.full_name)
-    end
+      click_button("Submit")
 
-    it 'I see number of purches next to each customer' do
-      visit merchant_dashboard_index_path(@merchant)
-
-      within("#customer-#{@customer_1.id}") do
-        expect(page).to have_content(@customer_1.transaction_count)
-      end
-
-      within("#customer-#{@customer_2.id}") do
-        expect(page).to have_content(@customer_2.transaction_count)
-      end
-
-      within("#customer-#{@customer_3.id}") do
-        expect(page).to have_content(@customer_3.transaction_count)
-      end
-
-      within("#customer-#{@customer_4.id}") do
-        expect(page).to have_content(@customer_4.transaction_count)
-      end
-
-      within("#customer-#{@customer_5.id}") do
-        expect(page).to have_content(@customer_5.transaction_count)
+      new_item = Item.where(name: 'Thing').first
+      within("#item-#{new_item.id}") do
+        expect(page).to have_button("Enable")
       end
     end
 
-    it 'I see a section for items ready to ship' do
-      visit merchant_dashboard_index_path(@merchant)
+    it 'I see a message when I do not fill in any fields' do
+      visit new_merchant_item_path(@merchant)
 
-      expect(page).to have_content("Items Ready to Ship")
-      expect(page).to have_link("Invoice ##{@invoice_1.id}")
+      click_button("Submit")
+      
+      expect(page).to have_content("Your Item Has Not Been Created Due To Invalid Fields.")
     end
   end
 end
