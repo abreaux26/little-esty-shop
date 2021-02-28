@@ -29,7 +29,10 @@
   <header><h3>Top Five Merchants</h3></header>
   <ol>
     <% @top_five_merchants.each do |merchant| %>
-      <li class='top-merchant'><%= link_to merchant.name, admin_merchant_path(merchant) %></li>
+      <li class='top-merchant'>
+        <%= link_to merchant.name, admin_merchant_path(merchant) %> -
+        <%= "$#{merchant.merchant_revenue.truncate} in sales" %>
+      </li>
     <% end %>
   </ol>
 </aside>

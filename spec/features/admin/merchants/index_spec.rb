@@ -90,12 +90,12 @@ RSpec.describe 'Admin merchants index spec' do
         visit admin_merchants_path
 
         within('#top-merchants') do
-          actual_ordered_names = page.all('.top-merchant').map(&:text)
+          actual_ordered_text = page.all('.top-merchant').map(&:text)
           expected_ordered_names = ['Merchant 5', 'Merchant 4', 'Merchant 3', 'Merchant 2', 'Merchant 1']
 
-          expect(actual_ordered_names.size).to eq(5)
+          expect(actual_ordered_text.size).to eq(5)
           5.times do |i|
-            expect(actual_ordered_names[i]).to include(expected_ordered_names[i])
+            expect(actual_ordered_text[i]).to include(expected_ordered_names[i])
           end
         end
       end
@@ -113,6 +113,25 @@ RSpec.describe 'Admin merchants index spec' do
                                     admin_merchant_path(@merchant_1)]
 
           expect(actual_ordered_links).to eq(expected_ordered_links)
+        end
+      end
+
+      it 'shows total revenue next to merchant name' do
+        setup_top_five_revenue_merchants
+        visit admin_merchants_path
+
+        within('#top-merchants') do
+          actual_ordered_text = page.all('.top-merchant').map(&:text)
+          expected_currency_strings = ["$#{@merchant_5.total_revenue.truncate}",
+                                            "$#{@merchant_4.total_revenue.truncate}",
+                                            "$#{@merchant_3.total_revenue.truncate}",
+                                            "$#{@merchant_2.total_revenue.truncate}",
+                                            "$#{@merchant_1.total_revenue.truncate}"]
+
+          expect(actual_ordered_text.size).to eq(5)
+          5.times do |i|
+            expect(actual_ordered_text[i]).to include(expected_currency_strings[i])
+          end
         end
       end
     end
