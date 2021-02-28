@@ -349,7 +349,7 @@ RSpec.describe Merchant, type: :model do
     invoice_1 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: sample_date)
     invoice_2 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: sample_date)
     invoice_3 = Invoice.create!(customer_id: customer.id, status: Invoice.statuses[:completed], created_at: (sample_date + 1))
-    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 10)
+    InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 1, unit_price: 10)
     InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 20)
     InvoiceItem.create!(invoice_id: invoice_3.id, item_id: item_1.id, quantity: 10, unit_price: 10)
     Transaction.create!(invoice_id: invoice_1.id, result: Transaction.results[:success])

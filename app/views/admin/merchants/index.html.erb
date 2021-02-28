@@ -32,6 +32,9 @@
       <li class='top-merchant'>
         <%= link_to merchant.name, admin_merchant_path(merchant) %> -
         <%= "$#{merchant.merchant_revenue.truncate} in sales" %>
+        <ul><li class='top-merchant-best-day'>
+          <%= "Best single day was #{merchant.best_day.strftime('%A, %B %d, %Y')}" %>
+        </li></ul>
       </li>
     <% end %>
   </ol>
