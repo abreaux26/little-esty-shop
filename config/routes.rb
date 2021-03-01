@@ -13,4 +13,7 @@ Rails.application.routes.draw do
     resources :merchants
     resources :invoices
   end
+
+  get '/', to: 'welcome#show'
+  get '/welcome/merchants', to: 'welcome#index'
 end
