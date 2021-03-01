@@ -4,3 +4,17 @@
   <p>Status: <%= @invoice.status_view_format %></p>
   <p>Date Created: <%= @invoice.created_at_view_format %></p>
 </section>
+
+<h3>Customer Information:</h3>
+<section class='admin_invoice' id='customer_info'>
+  <p><%= @customer.full_name %></p>
+</section>
+<h3>Items:</h3>
+<section class='admin_invoice' id='ii_info'>
+  <% @items.each do |item| %>
+    <h4><%= item.name %></h4>
+    <p>Quantity: <%= InvoiceItem.search_for_quantity(@invoice.id, item.id) %></p>
+    <p>Price: <%= item.unit_price %></p>
+    <p>Status: <%= item.status %></p>
+  <% end %>
+</section>

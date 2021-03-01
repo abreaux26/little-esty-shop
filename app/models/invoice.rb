@@ -6,10 +6,6 @@ class Invoice < ApplicationRecord
 
   enum status: [:cancelled, :completed, :in_progress]
 
-  def self.find_from(customer_id)
-    where(customer_id: customer_id)
-  end
-
   def status_view_format
     status.titleize
   end
@@ -19,11 +15,19 @@ class Invoice < ApplicationRecord
   end
 
   def self.all_invoices_with_unshipped_items
-    joins(:invoice_items).where('invoice_items.status = ?', 1).distinct(:id).order(:created_at)
+    joins(:invoice_items)
+    .where('invoice_items.status = ?', 1)
+    .distinct(:id).order(:created_at)
+  end
+
+  def self.total_revenue(id)
+     Invoice.joins(:invoice_items)
+            .select("invoices.*, count('quantity*unit_price') as total_revenue")
+            .group(:id).find(id).total_revenue.first
   end
 
   def self.find_from_merchant(merchant_id)
-    joins(:items).where('items.merchant_id = ?', merchant_id)
+    joins(:items).where('items.merchant_id = ?', merchant_id).distinct
   end
 
   def customer_full_name
@@ -48,5 +52,9 @@ class Invoice < ApplicationRecord
 
   def invoice_item_status(item_id)
     find_invoice_item(item_id).status
+  end
+
+  def total_revenue
+    invoice_items.pluck(Arel.sql("sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue"))
   end
 end

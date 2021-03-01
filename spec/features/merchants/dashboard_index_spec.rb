@@ -161,23 +161,23 @@ RSpec.describe 'As a merchant' do
       visit merchant_dashboard_index_path(@merchant)
 
       within("#customer-#{@customer_1.id}") do
-        expect(page).to have_content(@merchant.transaction_count(@customer_1.id))
+        expect(page).to have_content(@customer_1.transaction_count)
       end
 
       within("#customer-#{@customer_2.id}") do
-        expect(page).to have_content(@merchant.transaction_count(@customer_2.id))
+        expect(page).to have_content(@customer_2.transaction_count)
       end
 
       within("#customer-#{@customer_3.id}") do
-        expect(page).to have_content(@merchant.transaction_count(@customer_3.id))
+        expect(page).to have_content(@customer_3.transaction_count)
       end
 
       within("#customer-#{@customer_4.id}") do
-        expect(page).to have_content(@merchant.transaction_count(@customer_4.id))
+        expect(page).to have_content(@customer_4.transaction_count)
       end
 
       within("#customer-#{@customer_5.id}") do
-        expect(page).to have_content(@merchant.transaction_count(@customer_5.id))
+        expect(page).to have_content(@customer_5.transaction_count)
       end
     end
 

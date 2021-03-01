@@ -8,14 +8,15 @@ RSpec.describe 'As a merchant' do
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
 
-    @item_1 = create(:item, merchant_id: @merchant_1.id)
-    @item_2 = create(:item, merchant_id: @merchant_2.id)
+    @item_1 = create(:item, merchant_id: @merchant_1.id, unit_price: 1.00)
+    @item_2 = create(:item, merchant_id: @merchant_2.id, unit_price: 1.00)
 
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
 
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending)
   end
 
   describe 'When I visit my merchants invoice show page(/merchants/merchant_id/invoices/invoice_id)' do
@@ -60,6 +61,39 @@ RSpec.describe 'As a merchant' do
       expect(page).not_to have_content(quantity)
       expect(page).not_to have_content(unit_price)
       expect(page).not_to have_content(status)
+    end
+
+    it 'I see the total revenue that will be generated from all of my items on the invoice' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      total_revenue = "Total Revenue: $#{'%.2f' % @invoice_1.total_revenue}"
+
+      expect(page).to have_content(total_revenue)
+    end
+
+    it 'for each item there is a status drop down' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_button("Update Item Status")
+
+        select("packaged", from: "status")
+        click_on "Update Item Status"
+      end
+
+      expect(current_path).to eq(merchant_invoice_path(@merchant_1, @invoice_1))
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_content("Status: Packaged")
+      end
+    end
+
+    it 'current item status is selected by default' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_select('status', selected: 'pending')
+      end
     end
   end
 end
