@@ -7,7 +7,7 @@
 </section>
 
 <section id='invoice_status_update'>
-  <%= form_with model: @invoice, url: admin_invoice_path, local: true do |form| %>
+  <%= form_with model: [:admin, @invoice], local: true do |form| %>
     <%= form.label :status %>
     <%= form.select :status, @invoice_statuses %>
     <%= form.submit %>
