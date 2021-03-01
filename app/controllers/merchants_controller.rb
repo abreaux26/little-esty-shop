@@ -1,2 +1,5 @@
-class MerchantController < ApplicationController
+class MerchantsController < ApplicationController
+  def index
+  end
+
 end
