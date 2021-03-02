@@ -3,6 +3,15 @@
 <section id='invoice_info'>
   <p>Status: <%= @invoice.status_view_format %></p>
   <p>Date Created: <%= @invoice.created_at_view_format %></p>
+  <p>Total Revenue: <%= number_to_currency((@invoice.total_revenue[0])) %></p>
+</section>
+
+<section id='invoice_status_update'>
+  <%= form_with model: [:admin, @invoice], local: true do |form| %>
+    <%= form.label :status %>
+    <%= form.select :status, @invoice_statuses %>
+    <%= form.submit %>
+  <% end %>
 </section>
 
 <h3>Customer Information:</h3>
