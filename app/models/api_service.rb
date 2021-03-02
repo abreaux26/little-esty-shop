@@ -18,7 +18,11 @@ class ApiService
   end
 
   def self.repo_object
-    Repo.new(repo).name
+    if repo.nil?
+      'API Limit Exceeded: Repository Info Not Available'
+    else
+      Repo.new(repo).name
+    end
   end
 
   def self.contributors
@@ -26,8 +30,16 @@ class ApiService
   end
 
   def self.contributor_objects
-    contributors.map do |data|
-      Contributor.new(data)
+    if contributors.is_a?(Hash)
+      'API Limit Exceeded: Contributor Info Not Available'
+    else
+      collaborators = [contributors[0], contributors[1], contributors[3], contributors[4]]
+      people = collaborators.map do |data|
+        Contributor.new(data)
+      end
+      people.map do |people|
+        "#{people.user_name} - #{commit_objects(people.user_name)} Commits\n"
+      end.to_sentence
     end
   end
 
@@ -36,9 +48,13 @@ class ApiService
   end
 
   def self.pull_objects
-    pulls.map do |data|
-      Pull.new(data)
-    end.size
+    if pulls.is_a?(Hash)
+      'API Limit Exceeded: Pull Request Info Not Available'
+    else
+      pulls.map do |data|
+        Pull.new(data)
+      end.size
+    end
   end
 
   def self.commits(user_name)
