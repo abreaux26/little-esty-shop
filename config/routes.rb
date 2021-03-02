@@ -15,5 +15,4 @@ Rails.application.routes.draw do
   end
 
   get '/', to: 'welcome#show'
-  get '/welcome/merchants', to: 'welcome#index'
 end
