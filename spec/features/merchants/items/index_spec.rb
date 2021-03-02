@@ -22,7 +22,7 @@ RSpec.describe 'As a merchant' do
     @invoice_item_2 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_2.id)
     @invoice_item_3 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_3.id)
     @invoice_item_4 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_4.id)
-    @invoice_item_5 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_5.id)
+    @invoice_item_5 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_5.id, status: :shipped)
     @invoice_item_6 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice_6.id, status: :shipped)
 
     @transaction_1 = create(:transaction, result: 1, invoice_id: @invoice_1.id)
