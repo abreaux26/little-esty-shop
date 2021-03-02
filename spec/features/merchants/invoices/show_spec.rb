@@ -39,9 +39,9 @@ RSpec.describe 'As a merchant' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
       name = "Name: #{@item_1.name}"
-      quantity = "Quantity: #{@invoice_1.invoice_item_quantity(@item_1.id)}"
-      unit_price = "Sold For: $#{@invoice_1.invoice_item_unit_price(@item_1.id)}"
-      status = "Status: #{@invoice_1.invoice_item_status(@item_1.id).capitalize}"
+      quantity = "Quantity: #{@invoice_item_1.quantity}"
+      unit_price = "Sold For: $#{@invoice_item_1.unit_price_fix}"
+      status = "Status: #{@invoice_item_1.status_view_format}"
 
       expect(page).to have_content(name)
       expect(page).to have_content(quantity)
@@ -50,12 +50,12 @@ RSpec.describe 'As a merchant' do
     end
 
     it 'I do not see any information related to Items for other merchants' do
-      visit merchant_invoice_path(@merchant_1, @invoice_1)
+      visit merchant_invoice_path(@merchant_1, @invoice_2)
 
-      name = "Name: #{@item_2.name}"
-      quantity = "Quantity: #{@invoice_2.invoice_item_quantity(@item_2.id)}"
-      unit_price = "Sold For: $#{@invoice_2.invoice_item_unit_price(@item_2.id)}"
-      status = "Status: #{@invoice_2.invoice_item_status(@item_2.id).capitalize}"
+      name = "Name: #{@item_1.name}"
+      quantity = "Quantity: #{@invoice_item_1.quantity}"
+      unit_price = "Sold For: $#{@invoice_item_1.unit_price_fix}"
+      status = "Status: #{@invoice_item_1.status_view_format}"
 
       expect(page).not_to have_content(name)
       expect(page).not_to have_content(quantity)
@@ -74,7 +74,7 @@ RSpec.describe 'As a merchant' do
     it 'for each item there is a status drop down' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
-      within "#item-#{@item_1.id}" do
+      within "#invoice-item-#{@item_1.id}" do
         expect(page).to have_button("Update Item Status")
 
         select("packaged", from: "status")
@@ -83,7 +83,7 @@ RSpec.describe 'As a merchant' do
 
       expect(current_path).to eq(merchant_invoice_path(@merchant_1, @invoice_1))
 
-      within "#item-#{@item_1.id}" do
+      within "#invoice-item-#{@item_1.id}" do
         expect(page).to have_content("Status: Packaged")
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe 'As a merchant' do
     it 'current item status is selected by default' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
-      within "#item-#{@item_1.id}" do
+      within "#invoice-item-#{@item_1.id}" do
         expect(page).to have_select('status', selected: 'pending')
       end
     end
