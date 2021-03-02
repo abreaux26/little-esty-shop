@@ -50,22 +50,21 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe 'instance methods' do
-    it 'finds the top five customers' do
-      setup_merchant_and_customers
-      expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
+    describe '#top_five_customers' do
+      it 'finds the top five customers' do
+        setup_merchant_and_customers
+        expected = [@customer_1, @customer_5, @customer_4, @customer_3, @customer_2]
 
-      expect(@merchant.top_five_customers).to eq(expected)
+        expect(@merchant.top_five_customers).to eq(expected)
+      end
     end
 
-    it 'returns items for the merchant that need to be shipped' do
-      setup_merchant_and_customers
-      expect(@merchant.invoice_items_ready).to eq([@invoice_item_1])
-      expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
-    end
-
-    it 'returns the invoice date for an item ready to ship' do
-      setup_merchant_and_customers
-      expect(@merchant.item_invoice_date(@invoice_1.id)).to eq(sample_date.strftime('%A, %B %d, %Y'))
+    describe '#invoice_items_ready' do
+      it 'returns items for the merchant that need to be shipped' do
+        setup_merchant_and_customers
+        expect(@merchant.invoice_items_ready).to eq([@invoice_item_1])
+        expect(@merchant.invoice_items_ready).not_to include(@invoice_item_2)
+      end
     end
 
     describe '#total_revenue' do
@@ -100,16 +99,6 @@ RSpec.describe Merchant, type: :model do
 
         expect(@merchant_10.best_day).to eq(sample_date)
       end
-    end
-
-    it 'returns the top five items for a merchant in terms of total_revenue' do
-      setup_merchant_and_customers
-      expect(@merchant.top_five_items).to eq([@item])
-    end
-
-    it 'returns total revenue for a merchants top five items' do
-      setup_merchant_and_customers
-      expect(@merchant.top_five_items.first.total_revenue.to_f.round(2)).to eq(375.0)
     end
   end
 
