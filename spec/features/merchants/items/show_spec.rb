@@ -121,7 +121,7 @@ RSpec.describe 'As a merchant' do
       expect(page).to have_content("#{@merchant.name}")
       expect(page).to have_content("#{@item.name}")
       expect(page).to have_content("Description: #{@item.description}")
-      expect(page).to have_content("Current Selling Price: #{@item.unit_price}")
+      expect(page).to have_content("Current Selling Price: $#{@item.unit_price}")
       expect(page).to have_button("Update Item")
     end
   end
