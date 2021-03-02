@@ -1,0 +1,8 @@
+<h1>All Merchant Accounts</h1>
+<h2>Please select account for Dashboard Access</h2>
+
+<% @merchants.each do |merchant| %>
+<section class="merchant_landing_page"id="merchant-<%= merchant.id %>">
+  <p><%= link_to "Merchant #{merchant.id}: #{merchant.name}", merchant_dashboard_index_path(merchant) %></p>
+</section>
+<% end %>

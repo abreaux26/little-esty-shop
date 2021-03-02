@@ -13,4 +13,6 @@ Rails.application.routes.draw do
     resources :merchants, except: :destroy
     resources :invoices, only: [:index, :show, :update]
   end
+
+  get '/', to: 'welcome#show'
 end
