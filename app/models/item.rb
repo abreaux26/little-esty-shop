@@ -29,4 +29,13 @@ class Item < ApplicationRecord
             .created_at
             .strftime('%m/%d/%Y')
   end
+
+  def self.top_five
+    joins(invoices: :transactions)
+    .where('transactions.result = ?', Transaction.results[:success])
+    .select("items.*, sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue")
+    .group(:id)
+    .order('total_revenue desc')
+    .limit(5)
+  end
 end
