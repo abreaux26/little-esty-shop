@@ -7,11 +7,15 @@
 <h2>Favorite Customers</h2>
 <ol>
   <% @top_five_customers.each do |customer| %>
-    <li id="customer-<%= customer.id %>"><%= customer.full_name %> - <%= customer.transaction_count %> Purchases</li>
+    <li id="customer-<%= customer.id %>">
+      <%= customer.full_name %> - <%= customer.transaction_count %> Purchases
+    </li>
   <% end %>
 </ol>
 
 <h2>Items Ready to Ship</h2>
 <% @items_ready_to_ship.each do |invoice_item| %>
-  <%= invoice_item.item_find(invoice_item.item_id).name %> - <%= link_to "Invoice ##{invoice_item.invoice_id}", merchant_invoice_path(@merchant, invoice_item.invoice_find(invoice_item.invoice_id)) %> - <%= @merchant.item_invoice_date(invoice_item.invoice_id) %><br>
+  <%= invoice_item.item_name %> -
+  <%= link_to "Invoice ##{invoice_item.invoice_id}", merchant_invoice_path(@merchant, invoice_item.invoice) %> -
+  <%= invoice_item.invoice_date %><br>
 <% end %>
