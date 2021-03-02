@@ -1,8 +1,10 @@
 class Admin::MerchantsController < ApplicationController
   def index
+    # TODO refactor using facade pattern?
     @merchants = Merchant.all
     @enabled_merchants = Merchant.by_status(:enabled)
     @disabled_merchants = Merchant.by_status(:disabled)
+    @top_five_merchants = Merchant.top_five_by_revenue
   end
 
   def show

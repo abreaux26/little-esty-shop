@@ -12,26 +12,44 @@ RSpec.describe Item do
   end
 
   describe 'class methods' do
-    it 'returns enabled items' do
-      expected = [@item]
+    describe '::enabled' do
+      it 'returns enabled items' do
+        expected = [@item]
 
-      expect(Item.enabled).to eq(expected)
+        expect(Item.enabled).to eq(expected)
+      end
     end
 
-    it 'returns disabled items' do
-      expected = [@item2, @item3, @item4, @item5, @item6]
+    describe '::disabled' do
+      it 'returns disabled items' do
+        expected = [@item2, @item3, @item4, @item5, @item6]
 
-      expect(Item.disabled).to eq(expected)
+        expect(Item.disabled).to eq(expected)
+      end
     end
 
-    it 'returns max id plus 1' do
-      expect(Item.max_id).to eq(Item.maximum(:id) + 1)
+    describe "::max_id" do
+      it 'returns max id plus 1' do
+        expect(Item.max_id).to eq(Item.maximum(:id) + 1)
+      end
+    end
+
+    describe '::top_five' do
+      it 'returns the top five items for a merchant in terms of total_revenue' do
+        expect(Item.top_five).to eq([@item])
+      end
+
+      it 'returns total revenue for a merchants top five items' do
+        expect(Item.top_five.first.total_revenue.to_f.round(2)).to eq(375.0)
+      end
     end
   end
 
   describe 'instance methods' do
-    it 'returns the best day for a given item' do
-      expect(@item.best_day).to eq(sample_date.strftime('%m/%d/%Y'))
+    describe '#best_day' do
+      it 'returns the best day for a given item' do
+        expect(@item.best_day).to eq(sample_date.strftime('%m/%d/%Y'))
+      end
     end
   end
 

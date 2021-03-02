@@ -131,7 +131,7 @@ RSpec.describe 'As a merchant' do
       expect(page).to have_content("Your Item Has Been Updated")
       expect(page).to have_content("Updated Item")
       expect(page).to have_content("Description: Updated Item Description")
-      expect(page).to have_content("Current Selling Price: 75.0")
+      expect(page).to have_content("Current Selling Price: $75.0")
     end
 
     it 'does not allow item to be updated if attributes are entered incorrectly' do

@@ -1,12 +1,13 @@
 class InvoicesController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
-    @invoices = Invoice.find_from_merchant(@merchant.id)
+    @invoices = @merchant.invoices.distinct
   end
 
   def show
     @merchant = Merchant.find(params[:merchant_id])
-    @invoice = Invoice.find(params[:id])
-    @items_on_invoice = @invoice.items_on_invoice(@merchant.id)
+    invoice_id = params[:id]
+    @invoice = Invoice.find(invoice_id)
+    @invoice_items = InvoiceItem.find_all_by_invoice(invoice_id)
   end
 end
