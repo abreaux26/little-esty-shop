@@ -23,8 +23,4 @@ class InvoiceItem < ApplicationRecord
   def self.potential_revenue(invoiceid, itemid)
     search_for_quantity(invoiceid, itemid) * search_for_unit_price(invoiceid, itemid)
   end
-
-  def top_sales_date
-    
-  end
 end
