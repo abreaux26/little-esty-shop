@@ -9,9 +9,12 @@ class Customer < ApplicationRecord
   end
 
   def self.all_successful_transactions_by_customer_count
-    Customer.joins(:transactions).where("transactions.result = ?", Transaction.results[:success])
-    .select("customers.*, count('transactions') as successful_transactions_count")
-    .group(:id).order('successful_transactions_count desc').limit(5)
+    Customer.joins(:transactions)
+            .where("transactions.result = ?", Transaction.results[:success])
+            .select("customers.*, count('transactions') as successful_transactions_count")
+            .group(:id)
+            .order('successful_transactions_count desc')
+            .limit(5)
   end
 
   def transaction_count
