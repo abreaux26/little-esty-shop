@@ -1,10 +1,10 @@
 require 'faraday'
 require 'pry'
 require 'json'
-require_relative 'repo'
-require_relative 'contributor'
-require_relative 'pull'
-require_relative 'commit'
+require 'repo'
+require 'contributor'
+require 'pull'
+require 'commit'
 
 class ApiService
 
