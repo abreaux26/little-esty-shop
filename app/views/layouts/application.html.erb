@@ -11,11 +11,8 @@
 
   <body>
     <h2><%= @repo %></h2>
-    Contributors: <br>
-    <% @contributors.each do |cont| %>
-      * <%= cont.user_name %> - <%= ApiService.commit_objects(cont.user_name) %> Commits<br>
-    <% end %>
-    Pull Requests: <%= @pulls %>
+    Contributors: <%= @contributors %><br><br>
+    Pull Requests: <%= @pulls %><br><br>
 
     <%= link_to "All Merchant Dashboards", merchants_path %>
     <%= link_to "Admin Dashboard", admin_index_path %>
@@ -26,4 +23,4 @@
 
     <%= yield %>
   </body>
-</html>
+</html> 
