@@ -22,7 +22,7 @@ RSpec.describe Item do
 
     describe '::disabled' do
       it 'returns disabled items' do
-        expected = [@item2, @item3, @item4, @item5, @item6]
+        expected = [@item2, @item3, @item4, @item5, @item6, @item7]
 
         expect(Item.disabled).to eq(expected)
       end
@@ -36,7 +36,7 @@ RSpec.describe Item do
 
     describe '::top_five' do
       it 'returns the top five items for a merchant in terms of total_revenue' do
-        expect(Item.top_five).to eq([@item])
+        expect(Item.top_five).to eq([@item, @item7])
       end
 
       it 'returns total revenue for a merchants top five items' do
@@ -49,6 +49,10 @@ RSpec.describe Item do
     describe '#best_day' do
       it 'returns the best day for a given item' do
         expect(@item.best_day).to eq(sample_date.strftime('%m/%d/%Y'))
+      end
+
+      it 'edge case for items best day with same total revenue' do
+        expect(@item7.best_day).to eq(@invoice_61.created_at.strftime('%m/%d/%Y'))
       end
     end
   end
@@ -66,6 +70,7 @@ RSpec.describe Item do
     @item4 = create(:item, merchant_id: @merchant.id)
     @item5 = create(:item, merchant_id: @merchant.id)
     @item6 = create(:item, merchant_id: @merchant.id)
+    @item7 = create(:item, merchant_id: @merchant.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
     @invoice_1 = create(:invoice, customer_id: @customer_1.id, status: :completed, created_at: sample_date)
@@ -169,5 +174,19 @@ RSpec.describe Item do
     @customer_8 = create(:customer)
     @customer_9 = create(:customer)
     @customer_10 = create(:customer)
+
+    @customer_11 = create(:customer, first_name: "Zen")
+
+    @invoice_61 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-02-01')
+    @invoice_62 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-01-01')
+    @invoice_63 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-02-15')
+
+    @invoice_item_61 = create(:invoice_item, item_id: @item7.id, invoice_id: @invoice_61.id, quantity: 5, unit_price: 5.00)
+    @invoice_item_62 = create(:invoice_item, item_id: @item7.id, invoice_id: @invoice_62.id, quantity: 5, unit_price: 5.00)
+    @invoice_item_63 = create(:invoice_item, item_id: @item7.id, invoice_id: @invoice_63.id, quantity: 5, unit_price: 1.00)
+
+    @transaction_61 = create(:transaction, result: 1, invoice_id: @invoice_61.id)
+    @transaction_62 = create(:transaction, result: 1, invoice_id: @invoice_62.id)
+    @transaction_63 = create(:transaction, result: 1, invoice_id: @invoice_63.id)
   end
 end
