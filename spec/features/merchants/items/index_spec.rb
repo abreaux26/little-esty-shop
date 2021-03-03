@@ -5,10 +5,10 @@ RSpec.describe 'As a merchant' do
     @merchant = create(:merchant)
     @merchant2 = create(:merchant)
 
-    @item = create(:item, merchant_id: @merchant.id, status: :enabled)
-    @item2 = create(:item, merchant_id: @merchant.id, status: :disabled)
-    @item3 = create(:item, merchant_id: @merchant2.id)
-    @item4 = create(:item, merchant_id: @merchant2.id)
+    @item = create(:item, name: 'Item 1', merchant_id: @merchant.id, status: :enabled)
+    @item2 = create(:item, name: 'Item 2', merchant_id: @merchant.id, status: :disabled)
+    @item3 = create(:item, name: 'Item 3', merchant_id: @merchant2.id)
+    @item4 = create(:item, name: 'Item 4', merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -214,7 +214,7 @@ RSpec.describe 'As a merchant' do
 
       within("#top-five-item-#{@item4.id}") do
         best_day = "Top Day For #{@item4.name} Was: #{@item4.best_day}"
-        
+
         expect(page).to have_content(best_day)
       end
     end
