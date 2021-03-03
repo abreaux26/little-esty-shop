@@ -8,6 +8,7 @@ RSpec.describe 'As a merchant' do
     @item = create(:item, merchant_id: @merchant.id, status: :enabled)
     @item2 = create(:item, merchant_id: @merchant.id, status: :disabled)
     @item3 = create(:item, merchant_id: @merchant2.id)
+    @item4 = create(:item, merchant_id: @merchant2.id)
 
     @customer_1 = create(:customer, first_name: "Ace")
 
@@ -112,6 +113,20 @@ RSpec.describe 'As a merchant' do
     @customer_8 = create(:customer)
     @customer_9 = create(:customer)
     @customer_10 = create(:customer)
+
+    @customer_11 = create(:customer, first_name: "Zen")
+
+    @invoice_61 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-02-01')
+    @invoice_62 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-01-01')
+    @invoice_63 = create(:invoice, customer_id: @customer_11.id, created_at: '2020-02-15')
+
+    @invoice_item_61 = create(:invoice_item, item_id: @item4.id, invoice_id: @invoice_61.id, quantity: 5, unit_price: 5.00)
+    @invoice_item_62 = create(:invoice_item, item_id: @item4.id, invoice_id: @invoice_62.id, quantity: 5, unit_price: 5.00)
+    @invoice_item_63 = create(:invoice_item, item_id: @item4.id, invoice_id: @invoice_63.id, quantity: 5, unit_price: 1.00)
+
+    @transaction_61 = create(:transaction, result: 1, invoice_id: @invoice_61.id)
+    @transaction_62 = create(:transaction, result: 1, invoice_id: @invoice_62.id)
+    @transaction_63 = create(:transaction, result: 1, invoice_id: @invoice_63.id)
   end
 
   describe 'when i visit a merchants items index page' do
@@ -182,6 +197,25 @@ RSpec.describe 'As a merchant' do
 
       within("#item-#{@item2.id}") do
         expect(page).to have_button('Disable')
+      end
+    end
+
+    it 'I see top 5 items' do
+      visit merchant_items_path(@merchant2)
+
+      within("#top-five-item-#{@item4.id}") do
+        expect(page).to have_content(@item4.name)
+        expect(page).to have_content('55.00')
+      end
+    end
+
+    it 'I see items top date based off revenue for each top 5 item' do
+      visit merchant_items_path(@merchant2)
+
+      within("#top-five-item-#{@item4.id}") do
+        best_day = "Top Day For #{@item4.name} Was: #{@item4.best_day}"
+        
+        expect(page).to have_content(best_day)
       end
     end
   end
