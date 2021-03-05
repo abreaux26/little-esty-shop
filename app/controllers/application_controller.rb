@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
 before_action :repo_object,
               :contributor_objects,
-              :pull_objects
+              :pull_objects,
+              :holiday_objects
 
   def repo_object
     @repo ||= ApiService.repo_object
@@ -13,5 +14,9 @@ before_action :repo_object,
 
   def pull_objects
     @pulls ||= ApiService.pull_objects
+  end
+
+  def holiday_objects
+    @holidays ||=  ApiService.holiday_objects
   end
 end

@@ -10,6 +10,17 @@ class ApiService
     # parsed = JSON.parse(response.body, symbolize_names: true)
   end
 
+  def self.get_holiday_info
+    response = Faraday.get("https://date.nager.at/Api/v2/NextPublicHolidays/US")
+    json = JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def self.holiday_objects
+    get_holiday_info[0..2].map do |holiday|
+      Holiday.new(holiday)
+    end
+  end
+
   def self.repo
     # get_info('')[:name]
   end

@@ -1,8 +1,15 @@
-<h2><%= @merchant.name %></h2>
-
+<h1><%= @merchant.name %></h1>
+<h2>Discounts:</h2>
 <% @bulk_discounts.each do |discount| %>
   <li id="bulk-discount-<%= discount.id %>">
     <%= link_to "#{discount.percentage_discount * 100}% off
       #{discount.quantity_threshold} items" %>
   </li>
 <% end %>
+
+<div class="api">
+  <h2>Upcoming Holidays:</h2>
+  <% @holidays.each do |holiday| %>
+    <p><%= holiday.name %>: <%= holiday.date %></p>
+  <% end %>
+</div>
