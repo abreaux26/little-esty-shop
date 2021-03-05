@@ -1,0 +1,8 @@
+<h2><%= @merchant.name %></h2>
+
+<% @bulk_discounts.each do |discount| %>
+  <li id="bulk-discount-<%= discount.id %>">
+    <%= link_to "#{discount.percentage_discount * 100}% off
+      #{discount.quantity_threshold} items" %>
+  </li>
+<% end %>
