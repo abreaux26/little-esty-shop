@@ -14,9 +14,11 @@ RSpec.describe 'As a merchant' do
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
 
-    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending)
-    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged)
-    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending)
+    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending, quantity: 5, unit_price: 5)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged,  quantity: 2, unit_price:3)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending, quantity: 10, unit_price:5)
+
+    @bulk_discount = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 10, merchant: @merchant_1)
   end
 
   describe 'When I visit my merchants invoice show page(/merchants/merchant_id/invoices/invoice_id)' do
@@ -50,7 +52,7 @@ RSpec.describe 'As a merchant' do
     end
 
     it 'I do not see any information related to Items for other merchants' do
-      visit merchant_invoice_path(@merchant_1, @invoice_2)
+      visit merchant_invoice_path(@merchant_2, @invoice_2)
 
       name = "Name: #{@item_1.name}"
       quantity = "Quantity: #{@invoice_item_1.quantity}"
@@ -64,9 +66,9 @@ RSpec.describe 'As a merchant' do
     end
 
     it 'I see the total revenue that will be generated from all of my items on the invoice' do
-      visit merchant_invoice_path(@merchant_1, @invoice_1)
+      visit merchant_invoice_path(@merchant_2, @invoice_2)
 
-      total_revenue = "Total Revenue: $#{'%.2f' % @invoice_1.total_revenue}"
+      total_revenue = "Total Revenue: $#{'%.2f' % @invoice_2.total_revenue}"
 
       expect(page).to have_content(total_revenue)
     end
@@ -94,6 +96,14 @@ RSpec.describe 'As a merchant' do
       within "#invoice-item-#{@item_1.id}" do
         expect(page).to have_select('status', selected: 'pending')
       end
+    end
+
+    it 'I see that the total revenue for my merchant includes bulk discounts in the calculation' do
+      visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+      total_revenue_with_discounts = "Total Revenue: $#{'%.2f' % @invoice_1.total_revenue_after_discounts}"
+
+      expect(page).to have_content(total_revenue_with_discounts)
     end
   end
 end
