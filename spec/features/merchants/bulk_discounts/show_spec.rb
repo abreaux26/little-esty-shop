@@ -11,6 +11,7 @@ RSpec.describe 'As a merchant' do
     @bulk_discount_3 = BulkDiscount.create!(percentage_discount: 0.30, quantity_threshold: 12, merchant: @merchant_2)
     @bulk_discount_4 = BulkDiscount.create!(percentage_discount: 0.05, quantity_threshold: 4, merchant: @merchant_2)
   end
+
   describe 'When I visit my bulk discount index page' do
     it 'I click the bulk discount link and it takes me to the show page' do
       visit merchant_bulk_discounts_path(@merchant_1)
@@ -28,7 +29,7 @@ RSpec.describe 'As a merchant' do
     it 'I see the bulk discounts quantity threshold and percentage discount' do
       visit merchant_bulk_discount_path(@merchant_1, @bulk_discount_1)
 
-      expect(page).to have_content(@bulk_discount_1.percentage_discount)
+      expect(page).to have_content(@bulk_discount_1.percentage_discount * 100)
       expect(page).to have_content(@bulk_discount_1.quantity_threshold)
     end
   end
