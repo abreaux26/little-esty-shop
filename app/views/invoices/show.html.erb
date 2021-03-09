@@ -19,5 +19,9 @@
         <%= f.select :status, [:pending, :packaged, :shipped], selected: invoice_item.status %>
         <%= f.submit "Update Item Status" %><br>
       <% end %>
+
+      <% if !invoice_item.discount.nil? %>
+        <%= link_to "#{invoice_item.discount.percentage_discount * 100}%", merchant_bulk_discount_path(@merchant, invoice_item.discount.id) %>
+      <% end %>
     </section>
 <% end %>

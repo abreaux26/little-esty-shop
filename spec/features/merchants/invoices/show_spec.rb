@@ -10,6 +10,7 @@ RSpec.describe 'As a merchant' do
 
     @item_1 = create(:item, merchant_id: @merchant_1.id, unit_price: 1.00)
     @item_2 = create(:item, merchant_id: @merchant_2.id, unit_price: 1.00)
+    @item_3 = create(:item, merchant_id: @merchant_1.id, unit_price: 1.00)
 
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
@@ -17,6 +18,7 @@ RSpec.describe 'As a merchant' do
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending, quantity: 5, unit_price: 5)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged,  quantity: 2, unit_price:3)
     @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending, quantity: 10, unit_price:5)
+    @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, status: :pending, quantity: 10, unit_price:5)
 
     @bulk_discount = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 10, merchant: @merchant_1)
   end
@@ -106,12 +108,16 @@ RSpec.describe 'As a merchant' do
       end
     end
 
-    it 'I see that the total revenue for my merchant includes bulk discounts in the calculation' do
+    it 'I see a link to the show page for the bulk discount that was applied (if any) next to an invoice item' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
-      total_revenue_with_discounts = "Total Revenue: $#{'%.2f' % @invoice_1.total_revenue_after_discounts}"
+      within "#invoice-item-#{@item_1.id}" do
+        expect(page).not_to have_link('')
+      end
 
-      expect(page).to have_content(total_revenue_with_discounts)
+      within "#invoice-item-#{@item_3.id}" do
+        expect(page).to have_link('10.0%')
+      end
     end
   end
 end
