@@ -112,7 +112,7 @@ RSpec.describe 'As a merchant' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
       within "#invoice-item-#{@item_1.id}" do
-        expect(page).not_to have_link('')
+        expect(page).not_to have_link
       end
 
       within "#invoice-item-#{@item_3.id}" do
