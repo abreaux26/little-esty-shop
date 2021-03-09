@@ -35,6 +35,33 @@ RSpec.describe InvoiceItem do
       it 'returns bulk discount for that invoice item' do
         expect(@invoice_item_2.discount).to eq(@bulk_discount)
       end
+      it 'returns bulk discount for that invoice item' do
+        expect(@invoice_item_3.discount).to eq(@bulk_discount_2)
+      end
+    end
+
+    describe '#revenue' do
+      it 'returns revenue for that invoice item' do
+        revenue = @invoice_item_2.quantity * @invoice_item_2.unit_price
+        expect(@invoice_item_2.revenue).to eq(revenue)
+      end
+    end
+
+    describe '#take_off' do
+      it 'returns amount to take off for that invoice item' do
+        revenue = @invoice_item_2.quantity * @invoice_item_2.unit_price
+        take_off_amount = revenue * @invoice_item_2.discount.percentage_discount
+        expect(@invoice_item_2.take_off).to eq(take_off_amount)
+      end
+    end
+
+    describe '#revenue_after_discount' do
+      it 'returns revenue after discount for that invoice item' do
+        revenue = @invoice_item_2.quantity * @invoice_item_2.unit_price
+        take_off_amount = revenue * @invoice_item_2.discount.percentage_discount
+        revenue_after_discount_amount = revenue - take_off_amount
+        expect(@invoice_item_2.revenue_after_discount).to eq(revenue_after_discount_amount)
+      end
     end
   end
 
@@ -69,7 +96,7 @@ RSpec.describe InvoiceItem do
 
     @invoice_item_1 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_1.id, status: :pending, quantity:100)
     @invoice_item_2 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_2.id, unit_price: 5, quantity: 10)
-    @invoice_item_3 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_3.id)
+    @invoice_item_3 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_3.id, unit_price: 5, quantity: 15)
     @invoice_item_4 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_4.id)
     @invoice_item_5 = create(:invoice_item, item_id: @item.id, invoice_id: @invoice_5.id)
     @invoice_item_6 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice_6.id, status: :shipped)
@@ -163,5 +190,6 @@ RSpec.describe InvoiceItem do
     @customer_10 = create(:customer)
 
     @bulk_discount = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 10, merchant: @merchant)
+    @bulk_discount_2 = BulkDiscount.create!(percentage_discount: 0.20, quantity_threshold: 15, merchant: @merchant)
   end
 end

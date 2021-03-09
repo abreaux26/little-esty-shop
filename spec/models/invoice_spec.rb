@@ -36,7 +36,9 @@ RSpec.describe Invoice do
     @invoice_22 = create(:invoice, customer_id: @customer_2.id)
     @transaction_21 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_21.id)
     @transaction_22 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_22.id)
-    @ii_21 = create(:invoice_item, invoice_id: @invoice_21.id, status: InvoiceItem.statuses[:packaged])
+    @ii_21 = create(:invoice_item, invoice_id: @invoice_21.id, item_id: @item_1.id, status: InvoiceItem.statuses[:packaged], quantity: 12, unit_price: 2.00)
+    @ii_22 = create(:invoice_item, invoice_id: @invoice_22.id, item_id: @item_2.id, status: InvoiceItem.statuses[:shipped], quantity: 5, unit_price: 2.00)
+    @ii_23 = create(:invoice_item, invoice_id: @invoice_21.id, item_id: @item_3.id, status: InvoiceItem.statuses[:shipped], quantity: 15, unit_price: 5.00)
     #customer_3 related vars
     @invoice_31 = create(:invoice, customer_id: @customer_3.id)
     @invoice_32 = create(:invoice, customer_id: @customer_3.id)
@@ -45,6 +47,7 @@ RSpec.describe Invoice do
     @ii_31 = create(:invoice_item, invoice_id: @invoice_31.id, status: InvoiceItem.statuses[:shipped])
 
     @bulk_discount = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 10, merchant: @merchant)
+    @bulk_discount_2 = BulkDiscount.create!(percentage_discount: 0.20, quantity_threshold: 15, merchant: @merchant)
   end
 
   describe 'instance methods' do
@@ -80,19 +83,27 @@ RSpec.describe Invoice do
       end
     end
 
-    describe '#take_off' do
-      it 'returns amount needed to take off from a specific invoice' do
-        expect('%.2f' % @invoice_1.take_off).to eq('5.00')
-      end
-    end
-
     describe '#total_revenue_after_discounts' do
       it 'returns total revenue after discount is taken off for a specific invoice' do
         expect('%.2f' % @invoice_1.total_revenue_after_discounts).to eq('50.00')
       end
 
       it 'returns same number as total revenue if no discounts apply' do
-        expect('%.2f' % @invoice_2.total_revenue_after_discounts).to eq('10.00')
+        expect(@invoice_2.total_revenue_after_discounts).to eq(@invoice_2.total_revenue.first.to_f)
+      end
+
+      it 'returns total revenue after two discounts are applied' do
+        invoice_item_1_revenue = @ii_21.quantity * @ii_21.unit_price
+        take_off_1 = invoice_item_1_revenue * @bulk_discount.percentage_discount
+        discount_revenue_1 = invoice_item_1_revenue - take_off_1
+
+        invoice_item_2_revenue = @ii_23.quantity * @ii_23.unit_price
+        take_off_2 = invoice_item_2_revenue * @bulk_discount_2.percentage_discount
+        discount_revenue_2 = invoice_item_2_revenue - take_off_2
+
+        expected = '%.2f' % (discount_revenue_1 + discount_revenue_2)
+
+        expect('%.2f' % @invoice_21.total_revenue_after_discounts).to eq(expected)
       end
     end
   end
