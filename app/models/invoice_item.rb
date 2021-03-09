@@ -30,4 +30,17 @@ class InvoiceItem < ApplicationRecord
     .order('bulk_discounts.quantity_threshold desc')
     .first
   end
+
+  def revenue
+    quantity * unit_price
+  end
+
+  def take_off
+    return 0 if discount.nil?
+    revenue * discount.percentage_discount
+  end
+
+  def revenue_after_discount
+    revenue - take_off
+  end
 end
