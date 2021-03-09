@@ -23,4 +23,11 @@ class InvoiceItem < ApplicationRecord
   def invoice_date
     invoice.created_at_view_format
   end
+
+  def discount
+    bulk_discounts
+    .where('? >= bulk_discounts.quantity_threshold', quantity)
+    .order('bulk_discounts.quantity_threshold desc')
+    .first
+  end
 end
