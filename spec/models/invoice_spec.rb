@@ -90,6 +90,10 @@ RSpec.describe Invoice do
       it 'returns total revenue after discount is taken off for a specific invoice' do
         expect('%.2f' % @invoice_1.total_revenue_after_discounts).to eq('50.00')
       end
+
+      it 'returns same number as total revenue if no discounts apply' do
+        expect('%.2f' % @invoice_2.total_revenue_after_discounts).to eq('10.00')
+      end
     end
   end
 

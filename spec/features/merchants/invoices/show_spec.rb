@@ -73,6 +73,14 @@ RSpec.describe 'As a merchant' do
       expect(page).to have_content(total_revenue)
     end
 
+    it 'I see the total revenue after discounts applied' do
+      visit merchant_invoice_path(@merchant_2, @invoice_2)
+
+      total_revenue_after_discounts = "Total Revenue after Discount: $#{'%.2f' % @invoice_2.total_revenue_after_discounts}"
+
+      expect(page).to have_content(total_revenue_after_discounts)
+    end
+
     it 'for each item there is a status drop down' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
