@@ -19,6 +19,11 @@ RSpec.describe 'Admin invoices show page' do
 
         expect(page).to have_content("#{'%.2f' % @invoice_1.total_revenue}")
       end
+      it 'displays total revenue includes bulk discounts in the calculation' do
+        visit admin_invoice_path(@invoice_1)
+
+        expect(page).to have_content("#{'%.2f' % @invoice_1.total_revenue_after_discounts}")
+      end
     end
 
     describe'displays customer information' do
@@ -59,7 +64,7 @@ RSpec.describe 'Admin invoices show page' do
       end
       it 'can pick a new status for the Invoice and see it updated on the Admin Invoice Show Page' do
         visit admin_invoice_path(@invoice_2)
-        
+
         select 'completed', from: 'Status'
         click_on('Update Invoice')
 
@@ -82,14 +87,21 @@ RSpec.describe 'Admin invoices show page' do
   end
 
   def setup
+    @merchant = create(:merchant)
+    
     @customer_1 = create(:customer)
+
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
-    @item_1 = create(:item)
+    @invoice_2 = create(:invoice, status: :in_progress)
+
+    @item_1 = create(:item, merchant: @merchant)
     @item_2 = create(:item)
     @item_3 = create(:item)
+
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
-    @invoice_2 = create(:invoice, status: :in_progress)
+
+    @bulk_discount = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 2, merchant: @merchant)
   end
 end
