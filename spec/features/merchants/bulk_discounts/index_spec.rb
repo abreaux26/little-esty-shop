@@ -8,8 +8,8 @@ RSpec.describe 'As a merchant' do
     @bulk_discount_1 = BulkDiscount.create!(percentage_discount: 0.20, quantity_threshold: 15, merchant: @merchant_1)
     @bulk_discount_2 = BulkDiscount.create!(percentage_discount: 0.10, quantity_threshold: 10, merchant: @merchant_1)
 
-    @bulk_discount_3 = BulkDiscount.create!(percentage_discount: 0.30, quantity_threshold: 12, merchant: @merchant_2)
-    @bulk_discount_4 = BulkDiscount.create!(percentage_discount: 0.05, quantity_threshold: 4, merchant: @merchant_2)
+    @bulk_discount_3 = BulkDiscount.create!(percentage_discount: 0.05, quantity_threshold: 4, merchant: @merchant_2)
+    @bulk_discount_4 = BulkDiscount.create!(percentage_discount: 0.30, quantity_threshold: 12, merchant: @merchant_2)
   end
 
   describe 'When I visit my merchant dashboard' do
@@ -38,6 +38,15 @@ RSpec.describe 'As a merchant' do
       expect(page).not_to have_content(@bulk_discount_3.quantity_threshold)
       expect(page).not_to have_content(@bulk_discount_4.percentage_discount * 100)
       expect(page).not_to have_content(@bulk_discount_4.quantity_threshold)
+    end
+
+    it 'I see them ordered by percentage discount then quantity threshold' do
+      visit merchant_bulk_discounts_path(@merchant_2)
+
+      first = find("#bulk-discount-#{@bulk_discount_4.id}")
+      second = find("#bulk-discount-#{@bulk_discount_3.id}")
+      
+      expect(first).to appear_before(second)
     end
 
     it 'Each bulk discount listed includes a link to its show page' do
